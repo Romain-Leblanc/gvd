@@ -2,23 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\CarburantRepository;
+use App\Repository\EtatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CarburantRepository::class)]
-class Carburant
+#[ORM\Entity(repositoryClass: EtatRepository::class)]
+class Etat
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 25)]
-    private ?string $carburant = null;
+    #[ORM\ManyToOne(inversedBy: 'etats')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TypeEtat $fk_type_etat = null;
 
-    #[ORM\OneToMany(mappedBy: 'fk_carburant', targetEntity: Vehicule::class, orphanRemoval: true)]
+    #[ORM\Column(length: 30)]
+    private ?string $etat = null;
+
+    #[ORM\OneToMany(mappedBy: 'fk_etat', targetEntity: Vehicule::class, orphanRemoval: true)]
     private Collection $vehicules;
 
     public function __construct()
@@ -31,14 +35,26 @@ class Carburant
         return $this->id;
     }
 
-    public function getCarburant(): ?string
+    public function getFkTypeEtat(): ?TypeEtat
     {
-        return $this->carburant;
+        return $this->fk_type_etat;
     }
 
-    public function setCarburant(string $carburant): static
+    public function setFkTypeEtat(?TypeEtat $fk_type_etat): static
     {
-        $this->carburant = $carburant;
+        $this->fk_type_etat = $fk_type_etat;
+
+        return $this;
+    }
+
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(string $etat): static
+    {
+        $this->etat = $etat;
 
         return $this;
     }
@@ -55,7 +71,7 @@ class Carburant
     {
         if (!$this->vehicules->contains($vehicule)) {
             $this->vehicules->add($vehicule);
-            $vehicule->setFkCarburant($this);
+            $vehicule->setFkEtat($this);
         }
 
         return $this;
@@ -65,8 +81,8 @@ class Carburant
     {
         if ($this->vehicules->removeElement($vehicule)) {
             // set the owning side to null (unless already changed)
-            if ($vehicule->getFkCarburant() === $this) {
-                $vehicule->setFkCarburant(null);
+            if ($vehicule->getFkEtat() === $this) {
+                $vehicule->setFkEtat(null);
             }
         }
 

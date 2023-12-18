@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TypeEtatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TypeEtatRepository::class)]
@@ -15,6 +17,14 @@ class TypeEtat
 
     #[ORM\Column(length: 25)]
     private ?string $type = null;
+
+    #[ORM\OneToMany(mappedBy: 'fk_type_etat', targetEntity: Etat::class, orphanRemoval: true)]
+    private Collection $etats;
+
+    public function __construct()
+    {
+        $this->etats = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -29,6 +39,36 @@ class TypeEtat
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Etat>
+     */
+    public function getEtats(): Collection
+    {
+        return $this->etats;
+    }
+
+    public function addEtat(Etat $etat): static
+    {
+        if (!$this->etats->contains($etat)) {
+            $this->etats->add($etat);
+            $etat->setFkTypeEtat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEtat(Etat $etat): static
+    {
+        if ($this->etats->removeElement($etat)) {
+            // set the owning side to null (unless already changed)
+            if ($etat->getFkTypeEtat() === $this) {
+                $etat->setFkTypeEtat(null);
+            }
+        }
 
         return $this;
     }
