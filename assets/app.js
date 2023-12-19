@@ -8,6 +8,12 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
 
+import './scripts/jquery.js';
+import './select2-4.0.13/select2.min.js';
+import './select2-4.0.13/fr.min.js';
+import './scripts/functions.js';
+import './bootstrap-5.2.2/js/bootstrap.min.js';
+
 // import bootstrap
 require('bootstrap');
 

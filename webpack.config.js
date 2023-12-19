@@ -23,6 +23,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('jquery', './assets/scripts/jquery.js')
     .addEntry('functions', './assets/scripts/functions.js')
+    .addStyleEntry('bootstrap', './assets/bootstrap-5.2.2/css/bootstrap.min.css')
     .addStyleEntry('fontawesome', './assets/fontawesome-6.2.0/css/all.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
