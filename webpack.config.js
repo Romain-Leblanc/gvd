@@ -21,6 +21,9 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('jquery', './assets/scripts/jquery.js')
+    .addEntry('functions', './assets/scripts/functions.js')
+    .addStyleEntry('fontawesome', './assets/fontawesome-6.2.0/css/all.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
