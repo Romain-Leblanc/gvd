@@ -24,8 +24,14 @@
                         </td>
                         <td data-label="N° inter.">{{ uneIntervention.id }}</td>
                         <td data-label="Date intervention">{{ dateEnFrancais(uneIntervention.getDateIntervention) }}</td>
-                        <td data-label="Voiture">{{ marqueModele(uneIntervention.getFKVehicule.getFKMarque.getMarque,uneIntervention.getFKVehicule.getFKModele.getModele) }}</td>
-                        <td data-label="Client">{{ nomPrenom(uneIntervention.getFKClient.getNom,uneIntervention.getFKClient.getPrenom) }}</td>
+                        {# Get model/brand from car #}
+                        {% set marque = uneIntervention.getFkVehicule.getFKModele.getFKMarque.getMarque %}
+                        {% set modele = uneIntervention.getFkVehicule.getFKModele.getModele %}
+                        {# Get firstname/lastname from customer #}
+                        {% set nom = uneIntervention.getFkVehicule.getFkClient.getNom %}
+                        {% set prenom = uneIntervention.getFkVehicule.getFkClient.getPrenom %}
+                        <td data-label="Voiture">{{ marqueModele(marque, modele) }}</td>
+                        <td data-label="Client">{{ nomPrenom(nom, prenom) }}</td>
                         <td data-label="Montant HT">{{ formatMontantEuros(uneIntervention.getMontantHT) }}</td>
                     </tr>
                 {% endfor %}
