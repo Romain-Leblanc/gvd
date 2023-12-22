@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Véhicules{% endblock %}
+
+{% block body %}
+    <div class="div-liste">
+        <div class="div-table">
+            <table class="table table-hover table-bordered align-middle text-center">
+                <thead class="thead-light align-middle">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">N° Véhicule</th>
+                    <th scope="col">Client</th>
+                    <th scope="col">Voiture</th>
+                    <th scope="col">Immatriculation</th>
+                    <th scope="col">Année</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for unVehicule in lesVehicules %}
+                    <tr>
+                        <td id="radio-button-table">
+                            <input type="radio" class="form-check-input" id="radio-input" name="radio-input" />
+                        </td>
+                        <td data-label="N° Voiture">{{ unVehicule.id }}</td>
+                        <td data-label="Client">{{ nomPrenom(unVehicule.getFKClient.getNom,unVehicule.getFKClient.getPrenom) }}</td>
+                        <td data-label="Voiture">{{ unVehicule.getFKMarque.getMarque ~ " " ~ unVehicule.getFKModele.getModele }}</td>
+                        <td data-label="Immatriculation">{{ unVehicule.Immatriculation }}</td>
+                        <td data-label="Année">{{ unVehicule.Annee }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-end fw-bold mt-2">
+            <p class="mb-0">{{ lesVehicules|length}} véhicule{{ affichagePlusieursValeurs(lesVehicules|length) }}</p>
+        </div>
+    </div>
+{% endblock %}
