@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Factures{% endblock %}
+
+{% block body %}
+    <div class="div-liste">
+        <div class="div-table">
+            <table class="table table-hover table-bordered align-middle text-center">
+                <thead class="thead-light align-middle">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">N° Facture</th>
+                    <th scope="col">Date facture</th>
+                    <th scope="col">Client</th>
+                    <th scope="col">Montant HT</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for uneFacture in lesFactures %}
+                    <tr>
+                        <td id="radio-button-table">
+                            <input type="radio" class="form-check-input" id="radio-input" name="radio-input" />
+                        </td>
+                        <td data-label="N° Facture">{{ uneFacture.id }}</td>
+                        <td data-label="Date facture">{{ dateEnFrancais(uneFacture.getDateFacture) }}</td>
+                        <td data-label="Client">{{ nomPrenom(uneFacture.getFKClient.getNom,uneFacture.getFKClient.getPrenom) }}</td>
+                        <td data-label="Montant HT">{{ formatMontantEuros(uneFacture.getMontantHT) }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-end fw-bold mt-2">
+            <p class="mb-0">{{ lesFactures|length}} facture{{ affichagePlusieursValeurs(lesFactures|length) }}</p>
+        </div>
+    </div>
+{% endblock %}
