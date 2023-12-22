@@ -23,8 +23,14 @@
                             <input type="radio" class="form-check-input" id="radio-input" name="radio-input" />
                         </td>
                         <td data-label="N° Voiture">{{ unVehicule.id }}</td>
-                        <td data-label="Client">{{ nomPrenom(unVehicule.getFKClient.getNom,unVehicule.getFKClient.getPrenom) }}</td>
-                        <td data-label="Voiture">{{ unVehicule.getFKMarque.getMarque ~ " " ~ unVehicule.getFKModele.getModele }}</td>
+                        {# Get model/brand from car #}
+                        {% set marque = unVehicule.getFKModele.getFKMarque.getMarque %}
+                        {% set modele = unVehicule.getFKModele.getModele %}
+                        {# Get firstname/lastname from customer #}
+                        {% set nom = unVehicule.getFkClient.getNom %}
+                        {% set prenom = unVehicule.getFkClient.getPrenom %}
+                        <td data-label="Client">{{ nomPrenom(nom, prenom) }}</td>
+                        <td data-label="Voiture">{{ marqueModele(marque, modele) }}</td>
                         <td data-label="Immatriculation">{{ unVehicule.Immatriculation }}</td>
                         <td data-label="Année">{{ unVehicule.Annee }}</td>
                     </tr>
