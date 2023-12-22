@@ -23,7 +23,12 @@
                         </td>
                         <td data-label="N° Facture">{{ uneFacture.id }}</td>
                         <td data-label="Date facture">{{ dateEnFrancais(uneFacture.getDateFacture) }}</td>
-                        <td data-label="Client">{{ nomPrenom(uneFacture.getFKClient.getNom,uneFacture.getFKClient.getPrenom) }}</td>
+                        {% for uneIntervention in uneFacture.getInterventions.getValues %}
+                            {# Get firstname/lastname customer #}
+                            {% set nom = uneIntervention.getFkVehicule.getFkClient.getNom %}
+                            {% set prenom = uneIntervention.getFkVehicule.getFkClient.getPrenom %}
+                            <td data-label="Client">{{ nomPrenom(nom, prenom) }}</td>
+                        {% endfor %}
                         <td data-label="Montant HT">{{ formatMontantEuros(uneFacture.getMontantHT) }}</td>
                     </tr>
                 {% endfor %}

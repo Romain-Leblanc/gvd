@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class FactureController extends AbstractController
 {
     #[Route('/facture', name: 'facture_index')]
-    public function index(): Response
+    public function index(FactureRepository $factureRepository): Response
     {
         $lesFactures = $factureRepository->findAll();
 
