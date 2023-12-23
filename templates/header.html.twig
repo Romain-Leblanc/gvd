@@ -3,7 +3,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div id="titre-page">
-        <p class="mb-0">{# titre page #}</p>
+        <p class="mb-0">{{ titrePage(app.request.attributes.get('_route')) }}</p>
     </div>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
@@ -12,21 +12,26 @@
         </div>
         <div class="offcanvas-body">
             <div id="menu-liens" class="navbar-nav flex-column">
-                <a class="nav-item nav-link active" href="#">Véhicules</a>
-                <a class="nav-item nav-link active" href="#">Clients</a>
-                <a class="nav-item nav-link active" href="#">Interventions</a>
-                <a class="nav-item nav-link active" href="#">Facturation</a>
+                <a class="nav-item nav-link {{ menuActif(app.request.attributes.get('_route'), "client") }}" href="{{ path('client_index') }}">Clients</a>
+                <a class="nav-item nav-link {{ menuActif(app.request.attributes.get('_route'), "vehicule") }}" href="{{ path('vehicule_index') }}">Véhicules</a>
+                <a class="nav-item nav-link {{ menuActif(app.request.attributes.get('_route'), "intervention") }}" href="{{ path('intervention_index') }}">Interventions</a>
+                <a class="nav-item nav-link {{ menuActif(app.request.attributes.get('_route'), "facture") }}" href="{{ path('facture_index') }}">Factures</a>
             </div>
             <div id="menu-admin">
                 <div class="flex-row justify-content-center">
-                    <a href="#" class="nav-item nav-link pr-2" title="Se déconnecter">
+                    <a href="{{ path('app_logout') }}" class="nav-item nav-link pr-2" title="Se déconnecter">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     </a>
                     <i class="fa-regular fa-user"></i>
                 </div>
                 <div class="flex-column text-center">
-                    <p class="mb-0 text-dark">{# Nom utilisateur connecté #}</p>
+                    <p class="mb-0 text-dark">{{ nomPrenom(app.user.nom, app.user.prenom) }}</p>
                 </div>
+            </div>
+            <div id="menu-admin-lien">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="nav-item nav-link text-dark" id="lien-admin" href="#">Accès administrateur</a>
+                {% endif %}
             </div>
         </div>
     </div>
