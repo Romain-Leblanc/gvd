@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients{% endblock %}
+
+{% block body %}
+    <div class="div-liste">
+        <div id="div-tab">
+            {% if errors is defined %}
+                {% for error in errors %}
+                    <div class="alert alert-danger" role="alert">{{ error.message|nl2br }}</div>
+                {% endfor %}
+            {% endif %}
+            {{ form_start(formAjoutClient) }}
+            <div class="div-detail mb-3">
+                {{ form_label(formAjoutClient.nom) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAjoutClient.nom) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAjoutClient.prenom) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAjoutClient.prenom) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAjoutClient.tel) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAjoutClient.tel) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAjoutClient.email) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAjoutClient.email) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAjoutClient.adresse) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAjoutClient.adresse) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAjoutClient.suite_adresse) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAjoutClient.suite_adresse) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAjoutClient.code_postal) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAjoutClient.code_postal) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAjoutClient.ville) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAjoutClient.ville) }}
+                </div>
+            </div>
+        </div>
+        <div class="div-envoi-form">
+            <button id="btn-submit" type="submit" class="btn btn-success">Valider</button>
+        </div>
+        {{ form_end(formAjoutClient) }}
+    </div>
+{% endblock %}

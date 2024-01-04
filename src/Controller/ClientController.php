@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
-use App\Repository\ClientRepository;
+use App\Entity\Client;
 use App\Form\FiltreTable\FiltreTableClientType;
+use App\Form\AddClientType;
+use App\Repository\ClientRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +36,26 @@ class ClientController extends AbstractController
         return $this->render('client/index.html.twig', [
             'lesClients' => $lesClients,
             'formFiltreTable' => $form->createView()
+        ]);
+    }
+
+    #[Route('/client/add', name: 'client_add', methods: ['GET', 'POST'])]
+    public function add(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $unClient = new Client();
+        $form = $this->createForm(AddClientType::class, $unClient);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $entityManager->persist($unClient);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('client_index');
+        }
+
+        return $this->render('client/add.html.twig', [
+            'errors' => $form->getErrors(true),
+            'formAjoutClient' => $form->createView()
         ]);
     }
 }
