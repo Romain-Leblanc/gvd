@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClientController extends AbstractController
 {
-    #[Route('/client', name: 'client_index')]
+    #[Route('/client', name: 'client_index', methods: ['GET', 'POST'])]
     public function index(ClientRepository $clientRepository): Response
     {
         $lesClients = $clientRepository->findAll();
