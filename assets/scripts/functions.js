@@ -2,7 +2,7 @@ global.boutonModifier = function boutonModifier(num) {
     // Si la valeur du bouton radio est un nombre entier, on affichage le bouton "modifier"
     if(Number.isInteger(num)) {
         let btn = document.getElementById("bouton-modifier");
-        btn.href = btn.baseURI+"/modifier/"+num;
+        btn.href = btn.baseURI+"/edit/"+num;
         btn.classList.remove('cacher');
         btn.classList.add('afficher');
     }
@@ -13,19 +13,14 @@ global.boutonsFacture = function boutonModifier(num) {
     if(Number.isInteger(num)) {
         let btnModifier = document.getElementById("bouton-modifier");
         let btnTelecharger = document.getElementById("bouton-telecharger");
-        let btnEnvoyer = document.getElementById("bouton-envoyer");
 
-        btnModifier.href = btnModifier.baseURI+"/modifier/"+num;
+        btnModifier.href = btnModifier.baseURI+"/edit/"+num;
         btnModifier.classList.remove('cacher');
         btnModifier.classList.add('afficher');
 
-        btnTelecharger.href = btnTelecharger.baseURI+"/telecharger/"+num;
+        btnTelecharger.href = btnTelecharger.baseURI+"/download/"+num;
         btnTelecharger.classList.remove('cacher');
         btnTelecharger.classList.add('afficher');
-
-        btnEnvoyer.href = btnEnvoyer.baseURI+"/envoyer/"+num;
-        btnEnvoyer.classList.remove('cacher');
-        btnEnvoyer.classList.add('afficher');
     }
 }
 

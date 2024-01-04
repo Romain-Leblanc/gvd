@@ -10,59 +10,59 @@
                     <div class="alert alert-danger" role="alert">{{ error.message|nl2br }}</div>
                 {% endfor %}
             {% endif %}
-            {{ form_start(formAddClient) }}
+            {{ form_start(formEditClient) }}
             <div class="div-detail mb-3">
-                {{ form_label(formAddClient.nom) }}
+                {{ form_label(formEditClient.nom) }}
                 <div class="col-lg-5 col-md-6">
-                    {{ form_widget(formAddClient.nom) }}
+                    {{ form_widget(formEditClient.nom) }}
                 </div>
             </div>
             <div class="div-detail mb-3">
-                {{ form_label(formAddClient.prenom) }}
+                {{ form_label(formEditClient.prenom) }}
                 <div class="col-lg-5 col-md-6">
-                    {{ form_widget(formAddClient.prenom) }}
+                    {{ form_widget(formEditClient.prenom) }}
                 </div>
             </div>
             <div class="div-detail mb-3">
-                {{ form_label(formAddClient.tel) }}
+                {{ form_label(formEditClient.tel) }}
                 <div class="col-lg-5 col-md-6">
-                    {{ form_widget(formAddClient.tel) }}
+                    {{ form_widget(formEditClient.tel) }}
                 </div>
             </div>
             <div class="div-detail mb-3">
-                {{ form_label(formAddClient.email) }}
+                {{ form_label(formEditClient.email) }}
                 <div class="col-lg-5 col-md-6">
-                    {{ form_widget(formAddClient.email) }}
+                    {{ form_widget(formEditClient.email) }}
                 </div>
             </div>
             <div class="div-detail mb-3">
-                {{ form_label(formAddClient.adresse) }}
+                {{ form_label(formEditClient.adresse) }}
                 <div class="col-lg-5 col-md-6">
-                    {{ form_widget(formAddClient.adresse) }}
+                    {{ form_widget(formEditClient.adresse) }}
                 </div>
             </div>
             <div class="div-detail mb-3">
-                {{ form_label(formAddClient.suite_adresse) }}
+                {{ form_label(formEditClient.suite_adresse) }}
                 <div class="col-lg-5 col-md-6">
-                    {{ form_widget(formAddClient.suite_adresse) }}
+                    {{ form_widget(formEditClient.suite_adresse) }}
                 </div>
             </div>
             <div class="div-detail mb-3">
-                {{ form_label(formAddClient.code_postal) }}
+                {{ form_label(formEditClient.code_postal) }}
                 <div class="col-lg-5 col-md-6">
-                    {{ form_widget(formAddClient.code_postal) }}
+                    {{ form_widget(formEditClient.code_postal) }}
                 </div>
             </div>
             <div class="div-detail mb-3">
-                {{ form_label(formAddClient.ville) }}
+                {{ form_label(formEditClient.ville) }}
                 <div class="col-lg-5 col-md-6">
-                    {{ form_widget(formAddClient.ville) }}
+                    {{ form_widget(formEditClient.ville) }}
                 </div>
             </div>
         </div>
         <div class="div-envoi-form">
             <button id="btn-submit" type="submit" class="btn btn-success">Valider</button>
         </div>
-        {{ form_end(formAddClient) }}
+        {{ form_end(formEditClient) }}
     </div>
 {% endblock %}

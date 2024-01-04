@@ -33,7 +33,6 @@ class ClientRepository extends ServiceEntityRepository
             ->set('c.suite_adresse', ":suite_adresse")
             ->set('c.code_postal', ":code_postal")
             ->set('c.ville', ":ville")
-            ->set('c.num_tva', ":num_tva")
             ->where('c.id = :id_client')
             ->setParameter("id_client", $client->getId())
             ->setParameter("nom", $client->getNom())
@@ -44,7 +43,6 @@ class ClientRepository extends ServiceEntityRepository
             ->setParameter("suite_adresse", $client->getSuiteAdresse())
             ->setParameter("code_postal", $client->getCodePostal())
             ->setParameter("ville", $client->getVille())
-            ->setParameter("num_tva", $client->getNumTVA())
             ->getQuery()
             ->getResult()
             ;

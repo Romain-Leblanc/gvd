@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Form\FiltreTable\FiltreTableClientType;
 use App\Form\AddClientType;
+use App\Form\EditClientType;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +56,32 @@ class ClientController extends AbstractController
 
         return $this->render('client/add.html.twig', [
             'errors' => $form->getErrors(true),
-            'formAjoutClient' => $form->createView()
+            'formAddClient' => $form->createView()
+        ]);
+    }
+
+    #[Route('/client/edit/{id}', name: 'client_edit', defaults: ['id' => 0], methods: ['GET', 'POST'])]
+    public function edit(int $id, ClientRepository $clientRepository, Request $request): Response
+    {
+        $unClient = $clientRepository->find($id);
+
+        // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
+        if($id == 0 || $unClient == null) {
+            $this->addFlash('client', 'Ce client n\'existe pas.');
+            return $this->redirectToRoute('client_index');
+        }
+        $form = $this->createForm(EditClientType::class, $unClient);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $clientRepository->updateClient($unClient);
+
+            return $this->redirectToRoute('client_index');
+        }
+
+        return $this->render('client/edit.html.twig', [
+            'errors' => $form->getErrors(true),
+            'formEditClient' => $form->createView()
         ]);
     }
 }
