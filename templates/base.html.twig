@@ -6,6 +6,7 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('bootstrap') }}
             {{ encore_entry_link_tags('fontawesome') }}
+            {{ encore_entry_link_tags('select2-style') }}
             {{ encore_entry_link_tags('app') }}
 
         {% endblock %}
@@ -13,6 +14,8 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
             {{ encore_entry_script_tags('jquery') }}
+            {{ encore_entry_script_tags('select2') }}
+            {{ encore_entry_script_tags('select2-fr') }}
             {{ encore_entry_script_tags('functions') }}
         {% endblock %}
     </head>
