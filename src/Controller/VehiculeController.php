@@ -2,9 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Vehicule;
 use App\Repository\VehiculeRepository;
+use App\Form\AddVehiculeType;
 use App\Form\FiltreTable\FiltreTableVehiculeType;
+use App\Repository\ModeleRepository;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,5 +46,63 @@ class VehiculeController extends AbstractController
             'lesVehicules' => $lesVehicules,
             'formFiltreTable' => $form->createView()
         ]);
+    }
+
+    #[Route('/vehicule/add', name: 'vehicule_add', methods: ['GET', 'POST'])]
+    public function add(VehiculeRepository $vehiculeRepository, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $unVehicule = new Vehicule();
+        $form = $this->createForm(AddVehiculeType::class, $unVehicule);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            // Si l'immatriculation saisie existe déjà et que l'identifiant du véhiculé modifié est différent
+            // de celui du véhicule qui possède l'immatriculation existante, on génère une erreur
+            $id = $vehiculeRepository->findOneBy(['immatriculation' => $unVehicule->getImmatriculation()]);
+            if(isset($id) && $unVehicule->getId() != $id->getId()) {
+                $message = "Cette immatriculation existe déjà pour un autre véhicule.";
+                return $this->render('vehicule/add.html.twig', [
+                    'errors' => $form->addError(new FormError($message))->getErrors(true),
+                    'formAddVehicule' => $form->createView()
+                ]);
+            }
+            else {
+                // Si aucun identifiant de modèle, on génère une erreur
+                if(is_null($unVehicule->getFkModele()) || $unVehicule->getFkModele() == "") {
+                    $message = "Veuillez sélectionner un modèle de véhicule.";
+                    return $this->render('vehicule/add.html.twig', [
+                        'errors' => $form->addError(new FormError($message))->getErrors(true),
+                        'formAddVehicule' => $form->createView()
+                    ]);
+                }
+                // Sinon on insère
+                else {
+                    $entityManager->persist($unVehicule);
+                    $entityManager->flush();
+                    return $this->redirectToRoute('vehicule_index');
+                }
+            }
+        }
+
+        return $this->render('vehicule/add.html.twig', [
+            'formAddVehicule' => $form->createView(),
+            'errors' => $form->getErrors(true),
+        ]);
+    }
+
+    #[Route('/vehicule/data', name: 'vehicule_data', methods: ['POST'])]
+    public function data(ModeleRepository $modeleRepository, Request $request, SerializerInterface $serializer): Response
+    {
+        // Récupère l'identifiant pour la requête
+        $id = (int) $request->request->get('marqueID');
+        if (!empty($id) && $id !== 0) {
+            // Renvoi la liste des modèles de la marque de voiture pour Ajax au format JSON
+            $liste = $modeleRepository->findBy(['fk_marque' => $id]);
+            return $this->json(['donnees' => $serializer->serialize($liste, 'json', ['groups' => ['main']])]);
+        }
+        else {
+            $this->addFlash('vehicule', 'Cet accès est restreint.');
+            return $this->redirectToRoute('vehicule_index');
+        }
     }
 }

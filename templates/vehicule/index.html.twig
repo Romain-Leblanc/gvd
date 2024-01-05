@@ -5,7 +5,7 @@
 {% block body %}
     <div class="div-liste">
         <div class="div-boutons mb-3">
-            <a href="#" class="btn btn-success" id="bouton-ajouter"><i class="fa-solid fa-plus"></i> Ajouter</a>
+            <a href="{{ path('vehicule_add') }}" class="btn btn-success" id="bouton-ajouter"><i class="fa-solid fa-plus"></i> Ajouter</a>
             {# Valeur par défaut pour la route sinon une erreur est générée. Cette valeur change au clic sur un bouton radio du tableau #}
             <a href="#" class="btn btn-primary cacher" id="bouton-modifier"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
         </div>

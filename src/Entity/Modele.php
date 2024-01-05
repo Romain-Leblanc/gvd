@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ModeleRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,18 +11,22 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ModeleRepository::class)]
 class Modele
 {
+    #[Groups('main')]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups('main')]
     #[ORM\ManyToOne(inversedBy: 'modeles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Marque $fk_marque = null;
 
+    #[Groups('main')]
     #[ORM\Column(length: 100)]
     private ?string $modele = null;
 
+    #[Groups('main')]
     #[ORM\OneToMany(mappedBy: 'fk_modele', targetEntity: Vehicule::class, orphanRemoval: true)]
     private Collection $vehicules;
 

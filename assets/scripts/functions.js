@@ -28,8 +28,8 @@ global.getModeleFromMarque = function getModeleFromMarque(value) {
     // Récupération du bouton "submit"
     let btnSubmit = $('#btn-submit');
     // Vérifie si le DOM actuel contient l'élement 'ajout'
-    if($("#ajout_vehicule_fk_modele").length > 0) {
-        let inputModele = $("#ajout_vehicule_fk_modele");
+    if($("#add_vehicule_fk_modele").length > 0) {
+        let inputModele = $("#add_vehicule_fk_modele");
         // Désactive les élements le temps de la requête Ajax
         inputModele.prop("disabled", true);
         btnSubmit.prop("disabled", true);
@@ -45,8 +45,8 @@ global.getModeleFromMarque = function getModeleFromMarque(value) {
         }
     }
     // Sinon si le DOM actuel contient l'élement 'modification'
-    else if($("#modification_vehicule_fk_modele").length > 0) {
-        let inputModele = $("#modification_vehicule_fk_modele");
+    else if($("#edit_vehicule_fk_modele").length > 0) {
+        let inputModele = $("#edit_vehicule_fk_modele");
         // Désactive les élements le temps de la requête Ajax
         inputModele.prop("disabled", true);
         btnSubmit.prop("disabled", true);
@@ -77,13 +77,14 @@ global.enableBtnSubmitOnModele = function enableBtnSubmitOnModele(value) {
 function ajaxQueryModele(inputModele, btnSubmit, value) {
     // Requête Ajax pour les modèles de voitures
     $.ajax({
-        url : '/vehicule/infos',
+        url : '/vehicule/data',
         type: 'POST',
         data : {"marqueID": value},
         success: function(html) {
             let liste = "<option value='' selected='selected'>-- Modèle --</option>";
             // Concaténation des "options" du select
-            html.donnees.forEach(element => liste += "<option value="+element.id+">"+element.modele+"</option>");
+            donnees = JSON.parse(html.donnees);
+            donnees.forEach(element => liste += "<option value='"+element.id+"'>"+element.modele+"</option>");
             // Vide les options actuelles du select puis les remplace
             inputModele.empty().append(liste);
             // Réactive les élements
@@ -93,12 +94,12 @@ function ajaxQueryModele(inputModele, btnSubmit, value) {
 }
 
 global.getInfosFromClientIntervention = function getInfosFromClientIntervention() {
-    let inputClient = $('#ajout_intervention_fk_client');
-    let inputVehicule = $('#ajout_intervention_fk_vehicule');
-    let inputEtat = $('#ajout_intervention_fk_etat');
-    let inputDetailIntervention = $('#ajout_intervention_detail_intervention');
-    let inputDureeIntervention = $('#ajout_intervention_duree_intervention');
-    let inputMontantHT = $('#ajout_intervention_montant_ht');
+    let inputClient = $('#add_intervention_fk_client');
+    let inputVehicule = $('#add_intervention_fk_vehicule');
+    let inputEtat = $('#add_intervention_fk_etat');
+    let inputDetailIntervention = $('#add_intervention_detail_intervention');
+    let inputDureeIntervention = $('#add_intervention_duree_intervention');
+    let inputMontantHT = $('#add_intervention_montant_ht');
     let btnSubmit = $('#btn-submit');
     inputVehicule.prop("disabled", true);
     inputEtat.prop("disabled", true);
@@ -112,7 +113,7 @@ global.getInfosFromClientIntervention = function getInfosFromClientIntervention(
             if(data.donnees !== "" && data.donnees !== undefined) {
                 let listeVehicule = "";
                 // Concaténation des "options" du select
-                data.donnees.forEach(element => listeVehicule += "<option value=" + element.id + ">" + element.fkMarque.marque + " " + element.fkModele.modele + " (" + element.immatriculation + ")" + "</option>");
+                data.donnees.forEach(element => listeVehicule += "<option value='" + element.id + "'>" + element.fkMarque.marque + " " + element.fkModele.modele + " (" + element.immatriculation + ")" + "</option>");
                 // Vide les options actuelles du select puis les remplace
                 inputVehicule.empty().append(listeVehicule);
                 // Supprime l'attribut 'disabled' des input concernés
@@ -140,13 +141,13 @@ global.getInfosFromClientIntervention = function getInfosFromClientIntervention(
 
 global.changeTotalFromTaux = function changeTotalFromTaux() {
     // Récupère les élements du DOM utilisés pour les calculs
-    let selectTVA = $('#ajout_facture_fk_taux')[0];
+    let selectTVA = $('#add_facture_fk_taux')[0];
     let divMontantHT = $('#total-ht')[0];
     let divMontantTVA = $('#total-tva')[0];
     let divMontantTTC = $('#total-ttc')[0];
-    let inputHiddenMontantHT = $('#ajout_facture_montant_ht');
-    let inputHiddenMontantTVA = $('#ajout_facture_montant_tva');
-    let inputHiddenMontantTTC = $('#ajout_facture_montant_ttc');
+    let inputHiddenMontantHT = $('#add_facture_montant_ht');
+    let inputHiddenMontantTVA = $('#add_facture_montant_tva');
+    let inputHiddenMontantTTC = $('#add_facture_montant_ttc');
     // Définit les valeurs par défaut
     let totalHT;
     let tauxTVA;
@@ -173,17 +174,17 @@ global.changeTotalFromTaux = function changeTotalFromTaux() {
 
 global.getInfosFromClientFacture = function getInfosFromClientFacture() {
     // Récupère les élements du DOM utilisés pour les calculs
-    let selectTVA = $('#ajout_facture_fk_taux');
-    let inputClient = $('#ajout_facture_fk_client');
+    let selectTVA = $('#add_facture_fk_taux');
+    let inputClient = $('#add_facture_fk_client');
     let tbodyTab = $('#table-interventions > tbody')[0];
-    let inputMoyenPaiement = $('#ajout_facture_fk_moyen_paiement');
-    let inputDatePaiement = $('#ajout_facture_date_paiement');
+    let inputMoyenPaiement = $('#add_facture_fk_moyen_paiement');
+    let inputDatePaiement = $('#add_facture_date_paiement');
     let divMontantHT = $('#total-ht')[0];
     let divMontantTVA = $('#total-tva')[0];
     let divMontantTTC = $('#total-ttc')[0];
-    let inputHiddenMontantHT = $('#ajout_facture_montant_ht');
-    let inputHiddenMontantTVA = $('#ajout_facture_montant_tva');
-    let inputHiddenMontantTTC = $('#ajout_facture_montant_ttc');
+    let inputHiddenMontantHT = $('#add_facture_montant_ht');
+    let inputHiddenMontantTVA = $('#add_facture_montant_tva');
+    let inputHiddenMontantTTC = $('#add_facture_montant_ttc');
     let btnSubmit = $('#btn-submit');
     // Définit les valeurs par défaut
     let totalHT = 0;
