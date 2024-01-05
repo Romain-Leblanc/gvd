@@ -4,37 +4,66 @@
 
 {% block body %}
     <div class="div-liste">
+        <div class="div-boutons mb-3">
+            <a href="#" class="btn btn-success" id="bouton-ajouter"><i class="fa-solid fa-plus"></i> Ajouter</a>
+            {# Valeur par défaut pour la route sinon une erreur est générée. Cette valeur change au clic sur un bouton radio du tableau #}
+            <a href="#" class="btn btn-primary cacher" id="bouton-modifier"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+        </div>
+        {% for notice in app.flashes('vehicule') %}
+            <div class="alert alert-danger" role="alert">{{ notice|nl2br }}</div>
+        {% endfor %}
         <div class="div-table">
             <table class="table table-hover table-bordered align-middle text-center">
                 <thead class="thead-light align-middle">
                 <tr>
+                    {{ form_start(formFiltreTable) }}
                     <th scope="col"></th>
-                    <th scope="col">N° Véhicule</th>
-                    <th scope="col">Client</th>
-                    <th scope="col">Voiture</th>
-                    <th scope="col">Immatriculation</th>
-                    <th scope="col">Année</th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.id_vehicule) }}
+                        {{ form_widget(formFiltreTable.id_vehicule) }}
+                    </th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.client) }}
+                        {{ form_widget(formFiltreTable.client) }}
+                    </th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.vehicule) }}
+                        {{ form_widget(formFiltreTable.vehicule) }}
+                    </th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.immatriculation) }}
+                        {{ form_widget(formFiltreTable.immatriculation) }}
+                    </th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.etat) }}
+                        {{ form_widget(formFiltreTable.etat) }}
+                    </th>
+                    {{ form_end(formFiltreTable) }}
                 </tr>
                 </thead>
                 <tbody>
-                {% for unVehicule in lesVehicules %}
+                {% if lesVehicules is not empty %}
+                    {% for unVehicule in lesVehicules %}
+                        <tr>
+                            <td id="radio-button-table">
+                                <input type="radio" class="form-check-input" id="radio-input" name="radio-input" onclick="boutonModifier({{ unVehicule.id }});" />
+                            </td>
+                            <td data-label="id_voiture">{{ unVehicule.id }}</td>
+                            <td data-label="client">{{ nomPrenom(unVehicule.getFKClient.getNom,unVehicule.getFKClient.getPrenom) }}</td>
+                            <td data-label="voiture">{{ marqueModele(unVehicule.getFKModele.getFKMarque.getMarque, unVehicule.getFKModele.getModele) }}</td>
+                            <td data-label="immatriculation">{{ unVehicule.Immatriculation }}</td>
+                            {% if unVehicule.getFkEtat.getFkTypeEtat.getType == "vehicule" and unVehicule.getFkEtat.getEtat == "Hors service" %}
+                                <td data-label="etat"><i style="color: red !important;" class="fa-solid fa-circle"></i></td>
+                            {% else %}
+                                <td data-label="etat"><i style="color: green !important;" class="fa-solid fa-circle"></i></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% else %}
                     <tr>
-                        <td id="radio-button-table">
-                            <input type="radio" class="form-check-input" id="radio-input" name="radio-input" />
-                        </td>
-                        <td data-label="N° Voiture">{{ unVehicule.id }}</td>
-                        {# Get model/brand from car #}
-                        {% set marque = unVehicule.getFKModele.getFKMarque.getMarque %}
-                        {% set modele = unVehicule.getFKModele.getModele %}
-                        {# Get firstname/lastname from customer #}
-                        {% set nom = unVehicule.getFkClient.getNom %}
-                        {% set prenom = unVehicule.getFkClient.getPrenom %}
-                        <td data-label="Client">{{ nomPrenom(nom, prenom) }}</td>
-                        <td data-label="Voiture">{{ marqueModele(marque, modele) }}</td>
-                        <td data-label="Immatriculation">{{ unVehicule.Immatriculation }}</td>
-                        <td data-label="Année">{{ unVehicule.Annee }}</td>
+                        <td colspan="6">Aucune donnée.</td>
                     </tr>
-                {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
         </div>
