@@ -26,12 +26,8 @@ class ClientController extends AbstractController
             // Récupère les données du formulaire de recherche
             $data = $request->request->get('filtre_table_client');
             // Si au moins un filtre a été saisi, on récupère les résultats
-            if ($data['id_client'] !== ""
-                || $data['client'] !== ""
-                || $data['coordonnees'] !== ""
-                || $data['adresse_complete'] !== "") {
+            if ($data['id_client'] !== "" || $data['client'] !== "" || $data['coordonnees'] !== "" || $data['adresse_complete'] !== "")
                 $lesClients = $clientRepository->filtreTableClient((array) $data);
-            }
         }
 
         return $this->render('client/index.html.twig', [
