@@ -25,10 +25,9 @@ class VehiculeRepository extends ServiceEntityRepository
     public function updateVehicule(Vehicule $vehicule) {
         $query = $this->createQueryBuilder('u')
             ->update(Vehicule::class, 'v');
-        if ($vehicule->getFkClient() !== null && $vehicule->getFkMarque() !== null && $vehicule->getFkModele() !== null) {
+        if ($vehicule->getFkClient() !== null && $vehicule->getFkModele() !== null) {
             $query = $query
                 ->set('v.fk_client', ":id_client")
-                ->set('v.fk_marque', ":id_marque")
                 ->set('v.fk_modele', ":id_modele")
                 ->set('v.fk_carburant', ":id_carburant")
                 ->set('v.immatriculation', ":immatriculation")
@@ -38,7 +37,6 @@ class VehiculeRepository extends ServiceEntityRepository
                 ->where('v.id = :id_vehicule')
                 ->setParameter("id_vehicule", $vehicule->getId())
                 ->setParameter("id_client", $vehicule->getFkClient()->getId())
-                ->setParameter("id_marque", $vehicule->getFkMarque()->getId())
                 ->setParameter("id_modele", $vehicule->getFkModele()->getId())
                 ->setParameter("id_carburant", $vehicule->getFkCarburant()->getId())
                 ->setParameter("immatriculation", $vehicule->getImmatriculation())

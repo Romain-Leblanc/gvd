@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Véhicules{% endblock %}
+
+{% block body %}
+    <div class="div-liste">
+        <div id="div-tab">
+            {% if errors is defined %}
+                {% for error in errors %}
+                    <div class="alert alert-danger" role="alert">{{ error.message|nl2br }}</div>
+                {% endfor %}
+            {% endif %}
+            {{ form_start(formEditVehicule) }}
+            <div class="div-detail mb-3">
+                {{ form_label(formEditVehicule.fk_client) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditVehicule.fk_client) }}
+                </div>
+            </div>
+            <div class="div-row mb-3 gap-3">
+                <div class="div-select-line">
+                    {{ form_label(formEditVehicule.fk_marque) }}
+                    {{ form_widget(formEditVehicule.fk_marque) }}
+                </div>
+                <div class="div-select-line">
+                    {{ form_label(formEditVehicule.fk_modele) }}
+                    {{ form_widget(formEditVehicule.fk_modele) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditVehicule.fk_etat) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditVehicule.fk_etat) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditVehicule.fk_carburant) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditVehicule.fk_carburant) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditVehicule.annee) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditVehicule.annee) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditVehicule.kilometrage) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditVehicule.kilometrage) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditVehicule.immatriculation) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditVehicule.immatriculation) }}
+                </div>
+            </div>
+        </div>
+        <div class="div-envoi-form">
+            <button id="btn-submit" type="submit" class="btn btn-success">Valider</button>
+        </div>
+        {{ form_end(formEditVehicule) }}
+    </div>
+{% endblock %}
