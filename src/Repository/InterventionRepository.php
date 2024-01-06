@@ -3,7 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Intervention;
+use App\Entity\Client;
+use App\Entity\Vehicule;
+use App\Entity\Modele;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +25,84 @@ class InterventionRepository extends ServiceEntityRepository
         parent::__construct($registry, Intervention::class);
     }
 
-//    /**
-//     * @return Intervention[] Returns an array of Intervention objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('i.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function updateIntervention(Intervention $intervention) {
+        return $this->createQueryBuilder('u')
+            ->update(Intervention::class, 'i')
+            ->set('i.date_intervention', ":date_intervention")
+            ->set('i.duree_intervention', ":duree_intervention")
+            ->set('i.detail_intervention', ":detail_intervention")
+            ->set('i.montant_ht', ":montant")
+            ->set('i.fk_etat', ":etat")
+            ->where('i.id = :id_intervention')
+            ->setParameter("id_intervention", $intervention->getId())
+            ->setParameter("date_intervention",$intervention->getDateIntervention())
+            ->setParameter("duree_intervention",$intervention->getDureeIntervention())
+            ->setParameter("detail_intervention", $intervention->getDetailIntervention())
+            ->setParameter("montant", $intervention->getMontantHT())
+            ->setParameter("etat", $intervention->getFKEtat()->getId())
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 
-//    public function findOneBySomeField($value): ?Intervention
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function updateInterventionByEtatAndNumFacture(array $idIntervention, int $idEtat, int $idFacture)
+    {
+        $query = $this->createQueryBuilder('f');
+        return $query
+            ->update(Intervention::class, 'i')
+            ->set('i.fk_etat', ":id_etat")
+            ->set('i.fk_facture', ":id_facture")
+            ->where($query->expr()->in("i.id", ":id_intervention"))
+            ->setParameter("id_etat", $idEtat)
+            ->setParameter("id_facture", $idFacture)
+            ->setParameter("id_intervention", $idIntervention)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /* Récupère les résultats de(s) filtre(s) saisi(s) */
+    public function filtreTableIntervention(array $filtre) {
+        $query = $this->createQueryBuilder('i')
+            ->innerJoin(Vehicule::class, 'v', Join::WITH, 'i.fk_vehicule = v.id')
+            ->innerJoin(Modele::class, 'mo', Join::WITH, 'v.fk_modele = mo.id')
+            ;
+        // Ajoute les valeurs de filtres en fonction de ceux qui ont été saisis
+        if ($filtre['id_intervention'] !== "") {
+            $value = $filtre['id_intervention'];
+            $query
+                ->andWhere('i.id LIKE :id')
+                ->setParameter('id', $value)
+            ;
+        }
+        if ($filtre['date_intervention'] !== "") {
+            $value = $filtre['date_intervention'];
+            $query
+                ->andWhere('i.date_intervention = :date')
+                ->setParameter('date_intervention', $value)
+            ;
+        }
+        if ($filtre['vehicule'] !== "") {
+            $value = $filtre['vehicule'];
+            // Recherche les interventions du modèle de véhicule correspondant
+            $query
+                ->andWhere('mo.id = :id_modele')
+                ->setParameter('id_modele', $value)
+            ;
+        }
+        if ($filtre['client'] !== "") {
+            $value = $filtre['client'];
+            $query
+                ->andWhere('v.fk_client = :client')
+                ->setParameter('client', $value)
+            ;
+        }
+        if ($filtre['montant_ht'] !== "") {
+            $value = $filtre['montant_ht'];
+            $query
+                ->andWhere('i.montant_ht = :montant_ht')
+                ->setParameter('montant_ht', $value)
+            ;
+        }
+        return $query->getQuery()->getResult();
+    }
 }
