@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Intervention{% endblock %}
+
+{% block body %}
+    <div class="div-liste">
+        <div id="div-tab">
+            {% if errors is defined %}
+                {% for error in errors %}
+                    <div class="alert alert-danger" role="alert">{{ error.message|nl2br }}</div>
+                {% endfor %}
+            {% endif %}
+            {% if formEditIntervention.vars.value.getFkFacture is not null %}
+                <div class="alert alert-danger" role="alert">Cette intervention est facturée, aucune modification possible.</div>
+            {% endif %}
+            {{ form_start(formEditIntervention) }}
+            <div class="div-detail mb-3">
+                {{ form_label(formEditIntervention.date_intervention) }}
+                <div class="col-lg-5 col-md-6 row mx-0">
+                    {{ form_widget(formEditIntervention.date_intervention) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditIntervention.client) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditIntervention.client) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditIntervention.fk_vehicule) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditIntervention.fk_vehicule) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditIntervention.fk_etat) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditIntervention.fk_etat) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditIntervention.detail) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditIntervention.detail) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditIntervention.duree) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditIntervention.duree) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditIntervention.montant_ht) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditIntervention.montant_ht) }}
+                </div>
+            </div>
+            {% if formEditIntervention.fk_facture is defined %}
+                <div class="div-detail mb-3">
+                    {{ form_label(formEditIntervention.fk_facture) }}
+                    <div class="col-lg-5 col-md-6">
+                        {{ form_widget(formEditIntervention.fk_facture) }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="div-envoi-form">
+            {% if formEditIntervention.vars.value.getFkEtat.getEtat == "Facturé" %}
+                <button id="btn-submit" type="submit" disabled class="btn btn-success">Valider</button>
+            {% else %}
+                <button id="btn-submit" type="submit" class="btn btn-success">Valider</button>
+            {% endif %}
+        </div>
+        {{ form_end(formEditIntervention) }}
+    </div>
+{% endblock %}

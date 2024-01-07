@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Intervention;
 use App\Form\AddInterventionType;
+use App\Form\EditInterventionType;
 use App\Form\FiltreTable\FiltreTableInterventionType;
 use App\Repository\InterventionRepository;
 use App\Repository\TypeEtatRepository;
@@ -64,6 +65,49 @@ class InterventionController extends AbstractController
         return $this->render('intervention/add.html.twig', [
             'errors' => $form->getErrors(true),
             'formAddIntervention' => $form->createView()
+        ]);
+    }
+
+    #[Route('/intervention/edit/{id}', name: 'intervention_edit', defaults: ['id' => 0], methods: ['GET', 'POST'])]
+    public function edit(int $id, InterventionRepository $interventionRepository, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $uneIntervention = $interventionRepository->find($id);
+
+        // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
+        if($id == 0 || $uneIntervention == null) {
+            $this->addFlash('intervention', 'Cette intervention n\'existe pas.');
+            return $this->redirectToRoute('intervention_index');
+        }
+
+        $form = $this->createForm(EditInterventionType::class, $uneIntervention);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Si l'intervention s'apprête à être terminée et que le montant HT est à zéro, on génère une erreur
+            if($uneIntervention->getFkEtat()->getEtat() == "Terminé" && $uneIntervention->getMontantHt() == 0) {
+                $message = "L'état de l'intervention est défini sur 'Terminé' mais le montant HT est à zéro.";
+                return $this->render('intervention/edit.html.twig', [
+                    'errors' => $form->addError(new FormError($message))->getErrors(true),
+                    'formEditIntervention' => $form->createView()
+                ]);
+            }
+            // Sinon si le type d'état de l'intervention concerne ceux des véhicules, on génère une erreur
+            elseif ($uneIntervention->getFkEtat()->getFkTypeEtat()->getType() == "vehicule") {
+                $message = "L'état de l'intervention doit concernés ceux pour les interventions.";
+                return $this->render('intervention/edit.html.twig', [
+                    'errors' => $form->addError(new FormError($message))->getErrors(true),
+                    'formEditIntervention' => $form->createView()
+                ]);
+            }
+            else {
+                $interventionRepository->updateIntervention($uneIntervention);
+                return $this->redirectToRoute('intervention_index');
+            }
+        }
+
+        return $this->render('intervention/edit.html.twig', [
+            'errors' => $form->getErrors(true),
+            'formEditIntervention' => $form->createView()
         ]);
     }
 
