@@ -94,11 +94,11 @@ function ajaxQueryModele(inputModele, btnSubmit, value) {
 }
 
 global.getInfosFromClientIntervention = function getInfosFromClientIntervention() {
-    let inputClient = $('#add_intervention_fk_client');
+    let inputClient = $('#add_intervention_client');
     let inputVehicule = $('#add_intervention_fk_vehicule');
     let inputEtat = $('#add_intervention_fk_etat');
-    let inputDetailIntervention = $('#add_intervention_detail_intervention');
-    let inputDureeIntervention = $('#add_intervention_duree_intervention');
+    let inputDetailIntervention = $('#add_intervention_detail');
+    let inputDureeIntervention = $('#add_intervention_duree');
     let inputMontantHT = $('#add_intervention_montant_ht');
     let btnSubmit = $('#btn-submit');
     inputVehicule.prop("disabled", true);
@@ -108,12 +108,13 @@ global.getInfosFromClientIntervention = function getInfosFromClientIntervention(
     inputMontantHT.prop("disabled", true);
     btnSubmit.prop("disabled", true);
 
-    $.post('/intervention/infos', {"clientID": inputClient.val()})
+    $.post('/intervention/data', {"clientID": inputClient.val()})
         .done(function(data) {
             if(data.donnees !== "" && data.donnees !== undefined) {
                 let listeVehicule = "";
                 // Concaténation des "options" du select
-                data.donnees.forEach(element => listeVehicule += "<option value='" + element.id + "'>" + element.fkMarque.marque + " " + element.fkModele.modele + " (" + element.immatriculation + ")" + "</option>");
+                donnees = JSON.parse(data.donnees);
+                donnees.forEach(element => listeVehicule += "<option value='" + element.id + "'>" + element.fk_modele.fk_marque.marque + " " + element.fk_modele.modele + " (" + element.immatriculation + ")" + "</option>");
                 // Vide les options actuelles du select puis les remplace
                 inputVehicule.empty().append(listeVehicule);
                 // Supprime l'attribut 'disabled' des input concernés
@@ -193,7 +194,7 @@ global.getInfosFromClientFacture = function getInfosFromClientFacture() {
     let tauxTVA = 0;
     let listeIntervention = "";
 
-    $.post('/facture/infos', {"clientID": inputClient.val()})
+    $.post('/facture/data', {"clientID": inputClient.val()})
         .done(function(data) {
              if(data.donnees !== "" && data.donnees !== undefined) {
                 selectTVA.prop('disabled', false);

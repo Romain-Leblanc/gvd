@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MarqueRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,11 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: MarqueRepository::class)]
 class Marque
 {
+    #[Groups(['intervention_data'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['intervention_data'])]
     #[ORM\Column(length: 50)]
     private ?string $marque = null;
 

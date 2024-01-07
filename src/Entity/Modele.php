@@ -11,22 +11,21 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ModeleRepository::class)]
 class Modele
 {
-    #[Groups('main')]
+    #[Groups(['vehicule_data', 'intervention_data'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups('main')]
+    #[Groups(['intervention_data'])]
     #[ORM\ManyToOne(inversedBy: 'modeles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Marque $fk_marque = null;
 
-    #[Groups('main')]
+    #[Groups(['vehicule_data', 'intervention_data'])]
     #[ORM\Column(length: 100)]
     private ?string $modele = null;
 
-    #[Groups('main')]
     #[ORM\OneToMany(mappedBy: 'fk_modele', targetEntity: Vehicule::class, orphanRemoval: true)]
     private Collection $vehicules;
 

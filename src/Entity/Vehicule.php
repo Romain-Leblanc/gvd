@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\VehiculeRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -11,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: VehiculeRepository::class)]
 class Vehicule
 {
+    #[Groups(['intervention_data'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -20,6 +22,7 @@ class Vehicule
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $fk_client = null;
 
+    #[Groups(['intervention_data'])]
     #[ORM\ManyToOne(inversedBy: 'vehicules')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Modele $fk_modele = null;
@@ -28,6 +31,7 @@ class Vehicule
     #[ORM\JoinColumn(nullable: false)]
     private ?Carburant $fk_carburant = null;
 
+    #[Groups(['intervention_data'])]
     #[ORM\Column(length: 10)]
     private ?string $immatriculation = null;
 

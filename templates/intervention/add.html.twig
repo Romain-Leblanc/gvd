@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Intervention{% endblock %}
+
+{% block body %}
+    <div class="div-liste">
+        <div id="div-tab">
+            {% if errors is defined %}
+                {% for error in errors %}
+                    <div class="alert alert-danger" role="alert">{{ error.message|nl2br }}</div>
+                {% endfor %}
+            {% endif %}
+            {{ form_start(formAddIntervention) }}
+            <div class="div-detail mb-3">
+                {{ form_label(formAddIntervention.date_intervention) }}
+                <div class="col-lg-5 col-md-6 row mx-0">
+                    {{ form_widget(formAddIntervention.date_intervention) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAddIntervention.client) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAddIntervention.client) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAddIntervention.fk_vehicule) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAddIntervention.fk_vehicule) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAddIntervention.fk_etat) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAddIntervention.fk_etat) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAddIntervention.detail) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAddIntervention.detail) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAddIntervention.duree) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAddIntervention.duree) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formAddIntervention.montant_ht) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formAddIntervention.montant_ht) }}
+                </div>
+            </div>
+        </div>
+        <div class="div-envoi-form">
+            <button id="btn-submit" type="submit" disabled class="btn btn-success">Valider</button>
+        </div>
+        {{ form_end(formAddIntervention) }}
+    </div>
+{% endblock %}

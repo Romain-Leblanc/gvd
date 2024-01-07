@@ -138,7 +138,7 @@ class VehiculeController extends AbstractController
         if (!empty($id) && $id !== 0) {
             // Renvoi la liste des modèles de la marque de voiture pour Ajax au format JSON
             $liste = $modeleRepository->findBy(['fk_marque' => $id]);
-            return $this->json(['donnees' => $serializer->serialize($liste, 'json', ['groups' => ['main']])]);
+            return $this->json(['donnees' => $serializer->serialize($liste, 'json', ['groups' => ['vehicule_data']])]);
         }
         else {
             $this->addFlash('vehicule', 'Cet accès est restreint.');
