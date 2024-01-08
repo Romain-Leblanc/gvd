@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Facture;
+use App\Entity\Vehicule;
+use App\Entity\Intervention;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +24,42 @@ class FactureRepository extends ServiceEntityRepository
         parent::__construct($registry, Facture::class);
     }
 
-//    /**
-//     * @return Facture[] Returns an array of Facture objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Facture
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /* Récupère les résultats de(s) filtre(s) saisi(s) */
+    public function filtreTableFacture(array $filtre) {
+        $query = $this->createQueryBuilder('f')
+            ->innerJoin(Intervention::class, 'i', Join::WITH, 'i.fk_facture = f.id')
+            ->innerJoin(Vehicule::class, 'v', Join::WITH, 'i.fk_vehicule = v.id')
+            ;
+        // Ajoute les valeurs de filtres en fonction de ceux qui ont été saisis
+        if ($filtre['id_facture'] !== "") {
+            $value = $filtre['id_facture'];
+            $query
+                ->andWhere('f.id LIKE :id')
+                ->setParameter('id', $value)
+            ;
+        }
+        if ($filtre['date_facture'] !== "") {
+            $value = $filtre['date_facture'];
+            $query
+                ->andWhere('f.date_facture = :date_facture')
+                ->setParameter('date_facture', $value)
+            ;
+        }
+        if ($filtre['client'] !== "") {
+            $value = $filtre['client'];
+            $query
+                ->andWhere('v.fk_client = :client')
+                ->setParameter('client', $value)
+            ;
+        }
+        if ($filtre['montant_ht'] !== "") {
+            $value = $filtre['montant_ht'];
+            $query
+                ->andWhere('f.montant_ht = :montant_ht')
+                ->setParameter('montant_ht', $value)
+            ;
+        }
+        $query->orderBy('f.id', 'DESC');
+        return $query->getQuery()->getResult();
+    }
 }

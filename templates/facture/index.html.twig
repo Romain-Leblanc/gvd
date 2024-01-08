@@ -4,34 +4,64 @@
 
 {% block body %}
     <div class="div-liste">
+        <div class="div-boutons mb-3">
+            <a href="#" class="btn btn-success" id="bouton-ajouter"><i class="fa-solid fa-plus"></i> Ajouter</a>
+            {# La valeur pour la route suivant change au clic sur un bouton radio du tableau #}
+            <a href="#" class="btn btn-primary cacher" id="bouton-modifier"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+            <a href="#" class="btn btn-secondary cacher" id="bouton-telecharger" target="_blank">Télécharger</a>
+            <a href="#" class="btn btn-light cacher" id="bouton-envoyer">Envoyer</a>
+        </div>
+        {% for notice in app.flashes('facture_mail_success') %}
+            <div class="alert alert-success" role="alert">{{ notice|nl2br }}</div>
+        {% endfor %}
+        {% for notice in app.flashes('facture') %}
+            <div class="alert alert-danger" role="alert">{{ notice|nl2br }}</div>
+        {% endfor %}
         <div class="div-table">
             <table class="table table-hover table-bordered align-middle text-center">
                 <thead class="thead-light align-middle">
                 <tr>
+                    {{ form_start(formFiltreTable) }}
                     <th scope="col"></th>
-                    <th scope="col">N° Facture</th>
-                    <th scope="col">Date facture</th>
-                    <th scope="col">Client</th>
-                    <th scope="col">Montant HT</th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.id_facture) }}
+                        {{ form_widget(formFiltreTable.id_facture) }}
+                    </th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.date_facture) }}
+                        {{ form_widget(formFiltreTable.date_facture) }}
+                    </th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.client) }}
+                        {{ form_widget(formFiltreTable.client) }}
+                    </th>
+                    <th scope="col">
+                        {{ form_label(formFiltreTable.montant_ht) }}
+                        {{ form_widget(formFiltreTable.montant_ht) }}
+                    </th>
+                    {{ form_end(formFiltreTable) }}
                 </tr>
                 </thead>
                 <tbody>
-                {% for uneFacture in lesFactures %}
+                {% if lesFactures is not empty %}
+                    {% for uneFacture in lesFactures %}
+                        <tr>
+                            <td id="radio-button-table">
+                                <input type="radio" class="form-check-input" id="radio-input" name="radio-input" onclick="boutonsFacture({{ uneFacture.id }});" />
+                            </td>
+                            <td data-label="id_facture">{{ uneFacture.id }}</td>
+                            <td data-label="date_facture">{{ dateEnFrancais(uneFacture.getDateFacture) }}</td>
+                            {# L'ID du client étant le même pour toutes les interventions de la facture, je récupère l'index 0 de la collection #}
+                            {% set leClient = uneFacture.getInterventions.getValues[0].getFkVehicule.getFkClient %}
+                            <td data-label="client">{{ nomPrenom(leClient.getNom, leClient.getPrenom) }}</td>
+                            <td data-label="montant_ht">{{ formatMontantEuros(uneFacture.getMontantHT) }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
                     <tr>
-                        <td id="radio-button-table">
-                            <input type="radio" class="form-check-input" id="radio-input" name="radio-input" />
-                        </td>
-                        <td data-label="N° Facture">{{ uneFacture.id }}</td>
-                        <td data-label="Date facture">{{ dateEnFrancais(uneFacture.getDateFacture) }}</td>
-                        {% for uneIntervention in uneFacture.getInterventions.getValues %}
-                            {# Get firstname/lastname customer #}
-                            {% set nom = uneIntervention.getFkVehicule.getFkClient.getNom %}
-                            {% set prenom = uneIntervention.getFkVehicule.getFkClient.getPrenom %}
-                            <td data-label="Client">{{ nomPrenom(nom, prenom) }}</td>
-                        {% endfor %}
-                        <td data-label="Montant HT">{{ formatMontantEuros(uneFacture.getMontantHT) }}</td>
+                        <td colspan="5">Aucune donnée.</td>
                     </tr>
-                {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
         </div>
