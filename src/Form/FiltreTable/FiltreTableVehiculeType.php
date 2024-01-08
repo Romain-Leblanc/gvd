@@ -61,7 +61,6 @@ class FiltreTableVehiculeType extends AbstractType
                     return $entityRepository->createQueryBuilder("v")
                         ->innerJoin(Modele::class, 'mo', Join::WITH, 'v.fk_modele = mo.id')
                         ->innerJoin(Marque::class, 'ma', Join::WITH, 'mo.fk_marque = ma.id')
-                        ->groupBy('ma.marque, mo.modele')
                         ;
                 },
                 'choice_label' => function(Vehicule $vehicule){

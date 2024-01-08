@@ -9,7 +9,6 @@ use App\Form\EditVehiculeType;
 use App\Form\FiltreTable\FiltreTableVehiculeType;
 use App\Repository\ModeleRepository;
 use App\Repository\InterventionRepository;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -39,9 +38,8 @@ class VehiculeController extends AbstractController
             if ($data['immatriculation'] !== "") $filtre['immatriculation'] = (string) $data['immatriculation'];
             if ($data['etat'] !== "") $filtre['fk_etat'] = (int) $data['etat'];
             // Si un filtre a été saisi, on récupère les nouvelles valeurs
-            if (isset($filtre)) {
+            if (isset($filtre))
                 $lesVehicules = $vehiculeRepository->findBy($filtre);
-            }
         }
 
         return $this->render('vehicule/index.html.twig', [
