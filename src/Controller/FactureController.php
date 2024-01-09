@@ -97,14 +97,13 @@ class FactureController extends AbstractController
             // Récupère la liste des interventions terminées du client qui ne sont pas facturées
             $liste = $interventionRepository->findInterventionByClientAndEtat($idClient);
 
-            // Définis l'état à 'Facturé' aux interventions du client correspondant
-            // puis ajoute chaque intervention à la facture qui va être persistée
+            // Définis l'état à 'Facturé' aux interventions du client correspondant puis ajoute chaque intervention à la facture qui va être persistée
             foreach ($liste as $uneIntervention) {
                 $uneIntervention->setFkEtat($etatRepository->findOneBy(['etat' => 'Facturé', 'fk_type_etat' => $typeEtatRepository->findOneBy(['type' => 'intervention'])]));
                 $uneFacture->addIntervention($uneIntervention);
-                $entityManager->persist($uneFacture);
-                $entityManager->flush();
             }
+            $entityManager->persist($uneFacture);
+            $entityManager->flush();
 
             // Génère et enregistre le PDF
             $this->generatePdf($uneFacture);
@@ -122,7 +121,6 @@ class FactureController extends AbstractController
 
     // Fonction qui génère le PDF à partir de l'objet Facture
     public function generatePdf(Facture $facture) {
-        dd($facture);
         // Récupération du logo pour le PDF
         $logo = $this->getParameter('kernel.project_dir')."/public/images/logo_64.png";
 

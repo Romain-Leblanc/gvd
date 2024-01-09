@@ -1,0 +1,140 @@
+{% extends 'facture/base_pdf.html.twig' %}
+
+{% block title %}Facture n°{{ uneFacture.id }}{% endblock %}
+
+{% block body %}
+    {# L'ID du client étant le même pour toutes les interventions de la facture, je récupère l'index 0 de la collection #}
+    {% set leClient = uneFacture.getInterventions.getValues[0].getFkVehicule.getFkClient %}
+    <table style="width:100%;">
+        <tr>
+            <td rowspan="4" style="width:50%;" align="left"><img src="{{ logo }}" alt="logo"></td>
+            <td style="width:50%;font-size:18px;font-weight:bold;color:#000;" align="right">Facture</td>
+        </tr>
+        <tr>
+            <td style="width:auto;font-weight:bold;" align="right">Réf. : {{ uneFacture.id }}</td>
+        </tr>
+        <tr>
+            <td style="width:auto;" align="right;">Date : {{ uneFacture.getDateFacture|date('d/m/Y') }}</td>
+        </tr>
+        <tr>
+            <td style="width:auto;" align="right;">Code client : {{ leClient.getId }}</td>
+        </tr>
+    </table>
+    <br>
+    <table style="width:100%;">
+        <tr>
+            <td style="width:40%;">Émetteur :</td>
+            <td style="width:5%;">&nbsp;</td>
+            <td style="width:55%;">Adresse à :</td>
+        </tr>
+        <tr>
+            <td style="background-color:#C0C0C0;width:40%;padding:10px;vertical-align:top;">
+                <div style="font-weight:bold;">Garage Vendelais</div>
+                12 rue du Gaulois<br>49350 Gennes-Val-de-Loire<br><br>Tél. / Fax : (+33)1 23 45 67 89<br>Mail : contact@gvd.test<br>
+            </td>
+            <td style="width:5%;">&nbsp;</td>
+            <td style="border: 1px solid #C0C0C0;width:55%;padding-top: 5px;padding-left: 70px;padding-bottom: 5px;padding-right: 0px;vertical-align:middle;">
+                <div style="font-weight:bold;">{{ nomPrenom(leClient.getNom, leClient.getPrenom) }}</div>
+                {{ adresseCompleteFacture(leClient.getAdresse, leClient.getSuiteAdresse, leClient.getCodePostal, leClient.getVille)|nl2br }}
+            </td>
+        </tr>
+    </table>
+    <br>
+    <div style="text-align:right;font-size:10px;">Montants exprimés en euros</div>
+    <table style="border-collapse: collapse;width:100%;">
+        <thead>
+        <tr>
+            <th style="border: 1px solid #C0C0C0;width:15%;text-align:center;">Date</th>
+            <th style="border: 1px solid #C0C0C0;width:20%;text-align:center;">Véhicule</th>
+            <th style="border: 1px solid #C0C0C0;width:40%;text-align:center;">Détail intervention</th>
+            <th style="border: 1px solid #C0C0C0;width:10%;text-align:center;">Durée (h)</th>
+            <th style="border: 1px solid #C0C0C0;width:15%;text-align:center;">Montant HT</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set paire = 0 %}
+        {% set nb_ligne = 0 %}
+        {% for uneIntervention in uneFacture.getInterventions.getValues %}
+            {% if paire == 0 %}
+                <tr style="vertical-align:middle;">
+                    <td style="background-color:#dddddd;border: 1px solid #C0C0C0;border-top-style:none;width:15%;text-align:center;font-size:11px;word-break: break-all;">
+                        {{ uneIntervention.getDateIntervention|date('d/m/Y') }}
+                    </td>
+                    <td style="background-color:#dddddd;border: 1px solid #C0C0C0;border-top-style:none;width:20%;text-align:center;font-size:11px;word-break: break-all;">
+                        {{ marqueModeleFacture(uneIntervention.getFkVehicule.getFkModele.getFkMarque.getMarque, uneIntervention.getFkVehicule.getFkModele.getModele) }}
+                    </td>
+                    <td style="background-color:#dddddd;border: 1px solid #C0C0C0;border-top-style:none;width:40%;font-size:11px;word-break: break-all;">
+                        {{ uneIntervention.getDetail|nl2br }}
+                    </td>
+                    <td style="background-color:#dddddd;border: 1px solid #C0C0C0;border-top-style:none;width:10%;text-align:center;padding-right:5px;font-size:11px;word-break: break-all;">
+                        {{ uneIntervention.getDuree }}
+                    </td>
+                    <td style="background-color:#dddddd;border: 1px solid #C0C0C0;border-top-style:none;width:15%;text-align:right;padding-right:5px;font-size:11px;word-break: break-all;">
+                        {{ formatMontantEuros(uneIntervention.getMontantHT) }}
+                    </td>
+                </tr>
+                {% set paire = 1 %}
+                {% set nb_ligne = nb_ligne + 1 %}
+            {% else %}
+                <tr style="vertical-align:middle;">
+                    <td style="border: 1px solid #C0C0C0;width:15%;text-align:center;font-size:11px;word-break: break-all;">
+                        {{ uneIntervention.getDateIntervention|date('d/m/Y') }}
+                    </td>
+                    <td style="border: 1px solid #C0C0C0;width:20%;text-align:center;font-size:11px;word-break: break-all;">
+                        {{ marqueModeleFacture(uneIntervention.getFkVehicule.getFkModele.getFkMarque.getMarque, uneIntervention.getFkVehicule.getFkModele.getModele) }}
+                    </td>
+                    <td style="border: 1px solid #C0C0C0;width:30%;font-size:11px;">
+                        {{ uneIntervention.getDetail|nl2br }}
+                    </td>
+                    <td style="border: 1px solid #C0C0C0;width:10%;text-align:center;vertical-align: middle;padding-right:5px;font-size:11px;word-break: break-all;">
+                        {{ uneIntervention.getDuree }}
+                    </td>
+                    <td style="border: 1px solid #C0C0C0;width:15%;text-align:right;vertical-align: middle;padding-right:5px;font-size:11px;word-break: break-all;">
+                        {{ formatMontantEuros(uneIntervention.getMontantHT) }}
+                    </td>
+                </tr>
+                {% set paire = 0 %}
+                {% set nb_ligne = nb_ligne + 1 %}
+            {% endif %}
+        {% endfor %}
+        {% set reste = 635-18*nb_ligne %}
+        {% if reste > 0 %}
+            <tr>
+                <td style="height:{{ reste }}px; border: 1px solid #C0C0C0;border-top-style:none;width:15%;text-align:left;">&nbsp;</td>
+                <td style="border: 1px solid #C0C0C0;border-top-style:none;width:20%;text-align:center;"></td>
+                <td style="border: 1px solid #C0C0C0;border-top-style:none;width:30%;"></td>
+                <td style="border: 1px solid #C0C0C0;border-top-style:none;width:10%;text-align:right;padding-right:5px;"></td>
+                <td style="border: 1px solid #C0C0C0;border-top-style:none;width:15%;text-align:right;padding-right:5px;"></td>
+            </tr>
+        {% endif %}</tbody>
+    </table>
+    <br>
+    <table style="border-collapse: collapse;width:100%;">
+            <tr>
+                {% if uneFacture.getFkMoyenPaiement is null %}
+                    <td style="width:60%;">Moyen de paiement : <span style="color: red;">Aucun précisé</span></td>
+                {% else %}
+                    <td style="width:60%;">Moyen de paiement : {{ uneFacture.getFkMoyenPaiement.getMoyenPaiement }}</td>
+                {% endif %}
+                <td style="border-collapse: collapse;border: 1px solid #C0C0C0;width:20%;">Montant HT :</td>
+                <td style="border-collapse: collapse;border: 1px solid #C0C0C0;width:20%;text-align:right;padding-right:5px;">{{ formatMontantEuros(uneFacture.getMontantHT) }}</td>
+            </tr>
+            <tr>
+                {% if uneFacture.getDatePaiement is null %}
+                    <td style="width:60%;">Date paiement : <span style="color: red;">Aucune précisée</span></td>
+                {% else %}
+                    <td style="width:60%;">Date paiement : {{ uneFacture.getDatePaiement|date('d/m/Y') }}</td>
+                {% endif %}
+                <td style="border-collapse:collapse;border: 1px solid #C0C0C0;width:20%;">Montant TVA ({{ uneFacture.getFkTaux.getTaux ~ "%" }}) :</td>
+                <td style="border-collapse: collapse;border: 1px solid #C0C0C0;width:20%;text-align:right;padding-right:5px;">{{ formatMontantEuros(formatTotalTVA(uneFacture.getMontantHT, uneFacture.getFkTaux.getTaux)) }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="border-collapse:collapse;border: 1px solid #C0C0C0;width:20%;">Montant TTC :</td>
+                <td style="border-collapse: collapse;border: 1px solid #C0C0C0;width:20%;text-align:right;padding-right:5px;">{{ formatMontantEuros(formatTotalTTC(uneFacture.getMontantHT, formatTotalTVA(uneFacture.getMontantHT, uneFacture.getFkTaux.getTaux))) }}</td>
+            </tr>
+    </table>
+    <br>
+    <HR>
+    <div style="font-weight:bold;font-size:10px;text-align:center;">S.A.R.L au capital de 50 000 euros - G.V.D</div>
+{% endblock %}
