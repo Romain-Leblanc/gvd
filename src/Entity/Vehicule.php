@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: VehiculeRepository::class)]
 class Vehicule
 {
-    #[Groups(['intervention_data'])]
+    #[Groups(['intervention_data', 'facture_data'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,7 +22,7 @@ class Vehicule
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $fk_client = null;
 
-    #[Groups(['intervention_data'])]
+    #[Groups(['intervention_data', 'facture_data'])]
     #[ORM\ManyToOne(inversedBy: 'vehicules')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Modele $fk_modele = null;

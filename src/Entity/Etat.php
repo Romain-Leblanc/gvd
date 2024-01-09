@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EtatRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,15 +11,18 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EtatRepository::class)]
 class Etat
 {
+    #[Groups(['facture_data'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\ManyToOne(inversedBy: 'etats')]
     #[ORM\JoinColumn(nullable: false)]
     private ?TypeEtat $fk_type_etat = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\Column(length: 30)]
     private ?string $etat = null;
 

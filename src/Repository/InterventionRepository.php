@@ -6,6 +6,8 @@ use App\Entity\Intervention;
 use App\Entity\Client;
 use App\Entity\Vehicule;
 use App\Entity\Modele;
+use App\Entity\Etat;
+use App\Entity\TypeEtat;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
@@ -56,6 +58,26 @@ class InterventionRepository extends ServiceEntityRepository
             ->setParameter("id_etat", $idEtat)
             ->setParameter("id_facture", $idFacture)
             ->setParameter("id_intervention", $idIntervention)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /* Renvoi la liste des interventions non facturés des véhicules du client pour Ajax au format JSON */
+    public function findInterventionByClientAndEtat(int $idClient)
+    {
+        $query = $this->createQueryBuilder('i');
+        return $query
+            ->innerJoin(Vehicule::class, 'v', Join::WITH, 'i.fk_vehicule = v.id')
+            ->innerJoin(Client::class, 'c', Join::WITH, 'v.fk_client = c.id')
+            ->innerJoin(Etat::class, 'e', Join::WITH, 'i.fk_etat = e.id')
+            ->innerJoin(TypeEtat::class, 'te', Join::WITH, 'e.fk_type_etat = te.id')
+            ->where('c.id = :id_client')
+            ->andWhere('i.fk_facture IS NULL')
+            ->andWhere('e.etat = :id_etat')
+            ->andWhere('te.type = :id_type_etat')
+            ->setParameter('id_client', $idClient)
+            ->setParameter('id_etat', 'Terminé')
+            ->setParameter('id_type_etat', 'intervention')
             ->getQuery()
             ->getResult();
     }

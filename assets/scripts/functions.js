@@ -176,7 +176,7 @@ global.changeTotalFromTaux = function changeTotalFromTaux() {
 global.getInfosFromClientFacture = function getInfosFromClientFacture() {
     // Récupère les élements du DOM utilisés pour les calculs
     let selectTVA = $('#add_facture_fk_taux');
-    let inputClient = $('#add_facture_fk_client');
+    let inputClient = $('#add_facture_client');
     let tbodyTab = $('#table-interventions > tbody')[0];
     let inputMoyenPaiement = $('#add_facture_fk_moyen_paiement');
     let inputDatePaiement = $('#add_facture_date_paiement');
@@ -203,15 +203,16 @@ global.getInfosFromClientFacture = function getInfosFromClientFacture() {
                 tauxTVA = calculTauxTVA(parseFloat(tauxValue));
 
                 // Concaténation du détail des interventions dans le tableau et du total HT des interventions
-                data.donnees.forEach(element => {
+                donnees = JSON.parse(data.donnees);
+                donnees.forEach(element => { console.log(element);
                     listeIntervention += '<tr class="tr-table-fact" id="tr-tab">' +
-                        '<td width="15%" scope="row" class="align-middle" id="td-date-intervention">'+new Date(element.dateCreation).toLocaleDateString("fr")+'</td>' +
-                        '<td width="20%" scope="row" class="align-middle" id="td-infos-vehicule">'+element.fkVehicule.fkMarque.marque+" - "+element.fkVehicule.fkModele.modele+'</td>' +
-                        '<td width="35%" scope="row" class="align-middle" id="td-detail-intervention">'+element.detailIntervention+'</td>' +
-                        '<td width="10%" scope="row" class="align-middle" id="td-duree-intervention">'+element.dureeIntervention+'h</td>' +
-                        '<td width="20%" scope="row" class="align-middle" id="td-montant-ht">'+formatMontantEuros(element.montantHt)+'</td>' +
+                        '<td width="15%" scope="row" class="align-middle" id="td-date-intervention">'+new Date(element.date_intervention).toLocaleDateString("fr")+'</td>' +
+                        '<td width="20%" scope="row" class="align-middle" id="td-infos-vehicule">'+element.fk_vehicule.fk_modele.fk_marque.marque+" - "+element.fk_vehicule.fk_modele.modele+'</td>' +
+                        '<td width="35%" scope="row" class="align-middle" id="td-detail-intervention">'+element.detail+'</td>' +
+                        '<td width="10%" scope="row" class="align-middle" id="td-duree-intervention">'+element.duree+'h</td>' +
+                        '<td width="20%" scope="row" class="align-middle" id="td-montant-ht">'+formatMontantEuros(element.montant_ht)+'</td>' +
                         '</tr>';
-                    totalHT += parseFloat(element.montantHt);
+                    totalHT += parseFloat(element.montant_ht);
                 })
                  // Remplace les valeurs du tableau avec les nouvelles interventions
                 tbodyTab.innerHTML = listeIntervention;

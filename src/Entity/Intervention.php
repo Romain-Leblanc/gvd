@@ -3,39 +3,49 @@
 namespace App\Entity;
 
 use App\Repository\InterventionRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InterventionRepository::class)]
 class Intervention
 {
+    #[Groups(['facture_data'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Vehicule $fk_vehicule = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     private ?Facture $fk_facture = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_creation = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_intervention = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $duree = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\Column(length: 500)]
     private ?string $detail = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\Column(nullable: true)]
     private ?float $montant_ht = null;
 
+    #[Groups(['facture_data'])]
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Etat $fk_etat = null;

@@ -11,18 +11,18 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ModeleRepository::class)]
 class Modele
 {
-    #[Groups(['vehicule_data', 'intervention_data'])]
+    #[Groups(['vehicule_data', 'intervention_data', 'facture_data'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['intervention_data'])]
+    #[Groups(['intervention_data', 'facture_data'])]
     #[ORM\ManyToOne(inversedBy: 'modeles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Marque $fk_marque = null;
 
-    #[Groups(['vehicule_data', 'intervention_data'])]
+    #[Groups(['vehicule_data', 'intervention_data', 'facture_data'])]
     #[ORM\Column(length: 100)]
     private ?string $modele = null;
 
