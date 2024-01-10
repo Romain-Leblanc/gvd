@@ -81,7 +81,7 @@ class FactureController extends AbstractController
                 ($uneFacture->getFkMoyenPaiement() !== null && $uneFacture->getDatePaiement() === null) ||
                 ($uneFacture->getFkMoyenPaiement() == null && $uneFacture->getDatePaiement() !== null)
             ) {
-                $message = "L'un des champs de paiement a été saisi, veuillez les remplir ou les laisser vide.";
+                $message = "L'un des 2 champs de paiement a été saisi, veuillez remplir les 2 ou les laisser vide.";
                 return $this->render('facture/ajout.html.twig', [
                     'errors' => $form->addError(new FormError($message))->getErrors(true),
                     'formAddFacture' => $form->createView(),
