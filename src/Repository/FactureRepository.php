@@ -24,6 +24,21 @@ class FactureRepository extends ServiceEntityRepository
         parent::__construct($registry, Facture::class);
     }
 
+    public function updateFacture(Facture $facture) {
+        return $this->createQueryBuilder('u')
+            ->update(Facture::class, 'f')
+            ->set('f.date_paiement', ":date_paiement")
+            ->set('f.fk_moyen_paiement', ":moyen_paiement")
+            ->where('f.id = :id_facture')
+            ->andWhere('f.date_facture = :date_facture')
+            ->setParameter("date_paiement", $facture->getDatePaiement()->format('Y-m-d'))
+            ->setParameter("moyen_paiement", $facture->getFKMoyenPaiement()->getId())
+            ->setParameter("id_facture", $facture->getId())
+            ->setParameter("date_facture", $facture->getDateFacture()->format('Y-m-d'))
+            ->getQuery()
+            ->getResult();
+    }
+
     /* Récupère les résultats de(s) filtre(s) saisi(s) */
     public function filtreTableFacture(array $filtre) {
         $query = $this->createQueryBuilder('f')

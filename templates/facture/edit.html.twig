@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Facture{% endblock %}
+
+{% block body %}
+    <div class="div-liste">
+        <div id="div-tab">
+            {% if formEditFacture.fk_moyen_paiement.vars.value != ""
+                and formEditFacture.date_paiement.vars.value != "" %}
+                {% set factureModifiable = false %}
+                <div class="alert alert-danger" role="alert">Cette facture n'est pas modifiable.</div>
+            {% else %}
+                {% set factureModifiable = true %}
+            {% endif %}
+            {% if errors is defined %}
+                {% for error in errors %}
+                    <div class="alert alert-danger" role="alert">{{ error.message|nl2br }}</div>
+                {% endfor %}
+            {% endif %}
+            {{ form_start(formEditFacture) }}
+            <div class="div-detail mb-3">
+                <label for="date_facture" class="text-center col-md-5 col-form-label">Date facture :</label>
+                <div class="col-lg-5 col-md-6">
+                    <input type="date" id="date_facture" name="date_facture" class="form-control input-50" disabled value="{{ formEditFacture.date_facture.vars.value|date('Y-m-d') }}">
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditFacture.client) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditFacture.client) }}
+                </div>
+            </div>
+            <div class="div-detail mb-3">
+                {{ form_label(formEditFacture.fk_taux) }}
+                <div class="col-lg-5 col-md-6">
+                    {{ form_widget(formEditFacture.fk_taux) }}
+                </div>
+            </div>
+            <div id="tab-fact-ajout" class="mb-3">
+                <table class="table text-center align-middle" id="table-interventions">
+                    <thead class="thead-light align-middle">
+                    <tr>
+                        <th width="15%" scope="col">Date</th>
+                        <th width="20%" scope="col">Voiture</th>
+                        <th width="35%" scope="col">Détail intervention</th>
+                        <th width="10%" scope="col">Durée</th>
+                        <th width="20%" scope="col">Montant HT</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for uneIntervention in interventions %}
+                            <tr class="tr-table-fact" id="tr-tab">
+                                <td width="15%" scope="row" class="align-middle" id="td-date-intervention">{{ uneIntervention.getDateIntervention|date('d/m/Y') }}</td>
+                                <td width="20%" scope="row" class="align-middle" id="td-infos-vehicule">{{ marqueModele(uneIntervention.getFKVehicule.getFKModele.getFKMarque.getMarque, uneIntervention.getFKVehicule.getFKModele.getModele) }}</td>
+                                <td width="35%" scope="row" class="align-middle" id="td-detail-intervention">{{ uneIntervention.getDetail|nl2br }}</td>
+                                <td width="10%" scope="row" class="align-middle" id="td-duree-intervention">{{ dureeIntervention(uneIntervention.getDuree) }}</td>
+                                <td width="20%" scope="row" class="align-middle" id="td-montant-ht">{{ formatMontantEuros(uneIntervention.getMontantHT) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="div-row mb-3 gap-0">
+                <div class="div-column mb-3">
+                    <div class="div-paiement mb-3 div-column-responsive">
+                        {{ form_label(formEditFacture.fk_moyen_paiement) }}
+                        {{ form_widget(formEditFacture.fk_moyen_paiement) }}
+                    </div>
+                    <div class="div-paiement mb-3 div-column-responsive">
+                        {{ form_label(formEditFacture.date_paiement) }}
+                        {{ form_widget(formEditFacture.date_paiement) }}
+                    </div>
+                </div>
+                <div class="div-column mb-3">
+                    <div class="div-total mb-3 div-column-responsive justify-content-end">
+                        <div class="div-titre-montant">
+                            <p class="p-montant">Montant HT :</p>
+                        </div>
+                        <div class="div-p-montant">
+                            <p id="total-ht" class="p-montant">{{ formatMontantEuros(formEditFacture.montant_ht.vars.value) }}</p>
+                        </div>
+                    </div>
+                    <div class="div-total mb-3 div-column-responsive justify-content-end">
+                        <div class="div-titre-montant">
+                            <p class="p-montant">Montant TVA :</p>
+                        </div>
+                        <div class="div-p-montant">
+                            <p id="total-tva" class="p-montant">{{ formatMontantEuros(formEditFacture.montant_tva.vars.value) }}</p>
+                        </div>
+                    </div>
+                    <div class="div-total mb-3 div-column-responsive justify-content-end">
+                        <div class="div-titre-montant">
+                            <p class="p-montant">Montant TTC :</p>
+                        </div>
+                        <div class="div-p-montant">
+                            <p id="total-ttc" class="p-montant">{{ formatMontantEuros(formEditFacture.montant_ttc.vars.value) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="div-envoi-form">
+            {% if factureModifiable == true %}
+                <button id="btn-submit" type="submit" class="btn btn-success">Valider</button>
+            {% endif %}
+        </div>
+        {{ form_end(formEditFacture) }}
+    </div>
+{% endblock %}

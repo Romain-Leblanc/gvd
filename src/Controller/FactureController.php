@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Facture;
 use App\Form\AddFactureType;
 use App\Form\FiltreTable\FiltreTableFactureType;
+use App\Form\EditFactureType;
 use App\Repository\FactureRepository;
 use App\Repository\InterventionRepository;
 use App\Repository\VehiculeRepository;
@@ -117,6 +118,44 @@ class FactureController extends AbstractController
             'errors' => $form->getErrors(true),
             'formAddFacture' => $form->createView(),
             'listeInterventions' => $listeInterventions
+        ]);
+    }
+
+    #[Route('/facture/edit/{id}', name: 'facture_edit', defaults: ['id' => 0], methods: ['GET', 'POST'])]
+    public function edit(int $id, FactureRepository $factureRepository, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $uneFacture = $factureRepository->find($id);
+
+        // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
+        if($id == 0 || $uneFacture == null) {
+            $this->addFlash('facture', 'Cette facture n\'existe pas.');
+            return $this->redirectToRoute('facture_index');
+        }
+
+        // Récupère les données du taux TVA de la facture
+        // Utilisés après la soumission du formulaire puisque les champs "client" et "facture" sont désactivés
+        $taux = $uneFacture->getFkTaux();
+
+        $form = $this->createForm(EditFactureType::class, $uneFacture);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Met à jour la facture
+            $factureRepository->updateFacture($uneFacture);
+
+            // Définit les valeurs de l'objet Facture avec les variables précédentes contenant ces informations
+            $uneFacture->setFkTaux($taux);
+
+            // Génère le nouveau PDF de la facture avec les nouvelles informations
+            $this->generatePdf($uneFacture);
+
+            return $this->redirectToRoute('facture_index');
+        }
+
+        return $this->render('facture/edit.html.twig', [
+            'errors' => $form->getErrors(true),
+            'formEditFacture' => $form->createView(),
+            'interventions' => $uneFacture->getInterventions()->getValues()
         ]);
     }
 
