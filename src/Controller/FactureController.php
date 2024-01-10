@@ -20,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 
 class FactureController extends AbstractController
@@ -117,6 +118,23 @@ class FactureController extends AbstractController
             'formAddFacture' => $form->createView(),
             'listeInterventions' => $listeInterventions
         ]);
+    }
+
+    #[Route('/facture/download/{id}', name: 'facture_download', defaults: ['id' => 0], methods: ['GET'])]
+    public function download(int $id, FactureRepository $factureRepository, Request $request): Response
+    {
+        // Récupère toutes les infos sur la facture
+        $uneFacture = $factureRepository->findOneBy(['id' => $id]);
+
+        // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
+        if($id == 0 || $uneFacture == null) {
+            $this->addFlash('facture', 'Cette facture n\'existe pas.');
+            return $this->redirectToRoute('facture_index');
+        }
+
+        // Récupération puis affichage du PDF de la facture
+        $chemin = $this->getParameter('kernel.project_dir')."/public/pdf_facture/".$id.".pdf";
+        return $this->file($chemin, null, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
     // Fonction qui génère le PDF à partir de l'objet Facture
