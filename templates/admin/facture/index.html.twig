@@ -1,0 +1,40 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Factures {{ "now"|date('Y') }}{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column gap-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Factures {{ "now"|date('Y') }} :</h6>
+        </div>
+        <table class="table table-admin table-admin-facture table-responsive table-bordered text-center align-middle">
+            <thead class="table-light align-middle">
+            <tr>
+                <th class="w-30">Mois</th>
+                <th class="w-30">Nombre factures</th>
+                <th class="w-40">Montant HT</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set totalNombre = 0 %}
+            {% set totalMontant = 0 %}
+            {% for unMoisFacture in lesMoisFactures %}
+                {% set totalNombre = totalNombre + unMoisFacture.nombre %}
+                {% set totalMontant = totalMontant + unMoisFacture.montant %}
+                <tr>
+                    <td class="w-30">{{ unMoisFacture.mois }}</td>
+                    <td class="w-30">{{ unMoisFacture.nombre }}</td>
+                    <td class="w-40">{{ formatMontantEuros(unMoisFacture.montant) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td class="fw-bold">TOTAL</td>
+                <td class="fw-bold">{{ totalNombre }}</td>
+                <td class="fw-bold">{{ formatMontantEuros(totalMontant) }}</td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}

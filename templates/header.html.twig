@@ -30,7 +30,7 @@
             </div>
             <div id="menu-admin-lien">
                 {% if is_granted('ROLE_ADMIN') %}
-                    <a class="nav-item nav-link text-dark" id="lien-admin" href="#">Accès administrateur</a>
+                    <a class="nav-item nav-link text-dark" id="lien-admin" href="{{ path('facture_admin_index') }}">Accès administrateur</a>
                 {% endif %}
             </div>
         </div>
