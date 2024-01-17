@@ -1,0 +1,130 @@
+html {
+    height: 100%;
+}
+.bg-admin {
+    background-color: rgb(255, 255, 255);
+}
+.bg-admin > nav {
+    background-color: #cfcfcf;
+}
+.flex-1 {
+    flex: 1;
+}
+#filter-table > * {
+    font-size: 14px !important;
+}
+#logo-admin {
+    width: 50px;
+    height: 50px;
+}
+#titre-admin {
+    border-bottom: 1px solid red;
+}
+#fleche-gauche-page, #fleche-droite-page {
+    width: 16px;
+    height: 16px;
+}
+#div-table-admin {
+    height: 400px;
+    overflow-y: auto;
+}
+.table-admin {
+    font-size: 14px !important;
+}
+.w-5 {
+    width: 5%;
+}
+.w-10 {
+    width: 10%;
+}
+.w-15 {
+    width: 15%;
+}
+.w-20 {
+    width: 20%;
+}
+.w-30 {
+    width: 30%;
+}
+.w-35 {
+    width: 35%;
+}
+.w-40 {
+    width: 40%;
+}
+.fs-14 {
+    font-size: 14px !important;
+}
+.fs-13 {
+    font-size: 13px !important;
+}
+.fs-11 {
+    font-size: 11px !important;
+}
+.table-admin-facture tbody td,
+.table-admin-intervention tbody td,
+.table-admin-marque tbody td,
+.table-admin-modele tbody td
+{
+    word-break: break-word;
+}
+.table-admin-facture tfoot {
+    background-color: lightgrey;
+}
+.div-form, .div-detail {
+    height: 550px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.p-detail-titre {
+    text-align: center !important;
+}
+.select2-container {
+    padding: 0 !important;
+}
+.row {
+    align-items: center;
+}
+.div-boutons-admin > form > button {
+    width: 100%;
+}
+@media screen and (min-width: 1200px) {
+    .div-boutons-admin {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 5px;
+        vertical-align: middle;
+    }
+}
+/*@media screen and (max-width: 991px) {*/
+@media screen and (max-width: 1199px) {
+    .div-boutons-admin {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        vertical-align: middle;
+    }
+}
+@media screen and (min-width: 768px) {
+    .div-detail > div > .row > div {
+        border-top: 1px solid #dddddd;
+        border-bottom: 1px solid #dddddd;
+    }
+    .p-detail-contenu {
+        text-align: start !important;
+    }
+}
+@media screen and (max-width: 767px) {
+    .div-detail > div > .row {
+        border-top: 1px solid #dddddd;
+        border-bottom: 1px solid #dddddd;
+    }
+    .div-detail > div > .row > div {
+        border: 0;
+    }
+    .p-detail-contenu {
+        text-align: center !important;
+    }
+}

@@ -1,0 +1,59 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Détail utilisateur{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column gap-4">
+        <div class="d-flex justify-content-center align-items-center">
+            <h6 class="mb-0 text-primary text-decoration-underline">Utilisateur n°{{ unUtilisateur.id }}</h6>
+        </div>
+        <div class="div-detail">
+            <div class="d-flex flex-column gap-3">
+                <div class="row justify-content-center">
+                    <div class="py-2 col-md-5">
+                        <p class="mb-0 p-detail-titre fst-italic">Nom :</p>
+                    </div>
+                    <div class="py-2 col-lg-5 col-md-6 row mx-0 align-items-center text-break">
+                        <p class="mb-0 p-detail-contenu">{{ unUtilisateur.nom|upper }}</p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="py-2 col-md-5">
+                        <p class="mb-0 p-detail-titre fst-italic">Prénom :</p>
+                    </div>
+                    <div class="py-2 col-lg-5 col-md-6 row mx-0 align-items-center text-break">
+                        <p class="mb-0 p-detail-contenu">{{ unUtilisateur.prenom|capitalize }}</p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="py-2 col-md-5">
+                        <p class="mb-0 p-detail-titre fst-italic">Email :</p>
+                    </div>
+                    <div class="py-2 col-lg-5 col-md-6 row mx-0 align-items-center text-break">
+                        <p class="mb-0 p-detail-contenu">{{ unUtilisateur.email }}</p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="py-2 col-md-5">
+                        <p class="mb-0 p-detail-titre fst-italic">Mot de passe :</p>
+                    </div>
+                    <div class="py-2 col-lg-5 col-md-6 row mx-0 align-items-center text-break">
+                        <p class="mb-0 p-detail-contenu">N'est pas affiché</p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="py-2 col-md-5">
+                        <p class="mb-0 p-detail-titre fst-italic">Rôle :</p>
+                    </div>
+                    <div class="py-2 col-lg-5 col-md-6 row mx-0 align-items-center text-break">
+                        {% if "ROLE_ADMIN" in unUtilisateur.getRoles %}
+                            <p class="mb-0 p-detail-contenu">Administrateur</p>
+                        {% else %}
+                            <p class="mb-0 p-detail-contenu">Utilisateur</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

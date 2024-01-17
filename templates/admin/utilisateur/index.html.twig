@@ -1,0 +1,89 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Liste utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column gap-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ path('utilisateur_admin_new') }}" class="btn btn-success fs-13">Ajouter</a>
+            <form action="{{ path('utilisateur_admin_index') }}" method="GET" class="fs-13">
+                <label for="filter-admin" class="mb-0 p-0 d-flex justify-content-end">Nombre lignes :</label>
+                <select id="filter-admin" class="form-select form-select-sm fs-13" name="max" onchange="submit();">
+                    {% for unChoix in choixListe %}
+                        <option
+                                {% if app.request.query.get('max') is not null and unChoix == app.request.query.get('max') %}selected{% endif %}
+                                value="{{ unChoix }}">{{ unChoix }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            {{ knp_pagination_render(lesUtilisateursPagination) }}
+        </div>
+        {% for notice in app.flashes('utilisateur') %}
+            <div class="alert alert-danger" role="alert">{{ notice|nl2br }}</div>
+        {% endfor %}
+        <table style="overflow-x: auto" class="table table-admin table-admin-marque table-responsive table-hover table-bordered text-center align-middle">
+            <thead class="table-light align-middle">
+            <tr>
+                {{ form_start(formFiltreTable) }}
+                <th class="{% if lesUtilisateursPagination.isSorted('u.id') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(lesUtilisateursPagination, 'Id', 'u.id') }}
+                    {{ form_widget(formFiltreTable.id_utilisateur) }}
+                </th>
+                <th class="w-5">Connecté</th>
+                <th class="{% if lesUtilisateursPagination.isSorted('u.nom') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(lesUtilisateursPagination, 'Nom/prénom', 'u.nom') }}
+                    {{ form_widget(formFiltreTable.utilisateur) }}
+                </th>
+                <th class="{% if lesUtilisateursPagination.isSorted('u.roles') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(lesUtilisateursPagination, 'Rôle', 'u.roles') }}
+                    {{ form_widget(formFiltreTable.roles) }}
+                </th>
+                <th class="w-15">Actions</th>
+                {{ form_end(formFiltreTable) }}
+            </tr>
+            </thead>
+            <tbody>
+            {% if lesUtilisateursForm is not empty %}
+                {% for unUtilisateur in lesUtilisateursForm %}
+                    <tr>
+                        <td>{{ unUtilisateur.id }}</td>
+                        {% if app.user.id == unUtilisateur.id %}
+                            {% set utilisateurConnecte = true %}
+                            <td><i style="color: red" class="fa-solid fa-circle"></i></td>
+                        {% else %}
+                            {% set utilisateurConnecte = false %}
+                            <td>&nbsp;</td>
+                        {% endif %}
+                        <td class="text-wrap">{{ nomPrenom(unUtilisateur.getNom,unUtilisateur.getPrenom) }}</td>
+                        {% if "ROLE_ADMIN" in unUtilisateur.getRoles %}
+                            <td>{{ "Administrateur" }}</td>
+                            <td>
+                                <div class="div-boutons-admin">
+                                    <a href="{{ path('utilisateur_admin_show', { 'id': unUtilisateur.id }) }}" class="btn btn-primary fs-11 text-white">Détail</a>
+                                    <a href="{{ path('utilisateur_admin_edit', { 'id': unUtilisateur.id }) }}" class="btn btn-warning fs-11 text-dark"><i class="fa-solid fa-pen"></i></a>
+                                    {{ include('admin/utilisateur/_delete_form.html.twig') }}
+                                </div>
+                            </td>
+                        {% else %}
+                            <td>{{ "Utilisateur" }}</td>
+                            <td>
+                                <div class="div-boutons-admin">
+                                    <a href="{{ path('utilisateur_admin_show', { 'id': unUtilisateur.id }) }}" class="btn btn-primary fs-11 text-white">Détail</a>
+                                    <a href="{{ path('utilisateur_admin_edit', { 'id': unUtilisateur.id }) }}" class="btn btn-warning fs-11 text-dark"><i class="fa-solid fa-pen"></i></a>
+                                    {{ include('admin/utilisateur/_delete_form.html.twig') }}
+                                </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucune donnée.</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

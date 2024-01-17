@@ -25,6 +25,7 @@ Encore
     .addEntry('select2', './assets/select2-4.0.13/select2.min.js')
     .addEntry('select2-fr', './assets/select2-4.0.13/fr.min.js')
     .addEntry('functions', './assets/scripts/functions.js')
+    .addStyleEntry('admin', './assets/styles/admin.css')
     .addStyleEntry('bootstrap', './assets/bootstrap-5.2.2/css/bootstrap.min.css')
     .addStyleEntry('fontawesome', './assets/fontawesome-6.2.0/css/all.css')
     .addStyleEntry('select2-style', './assets/select2-4.0.13/select2.min.css')
