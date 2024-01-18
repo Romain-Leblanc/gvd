@@ -70,8 +70,8 @@ class FactureController extends AbstractController
         }
 
         // Création de l'objet Facture(), génération du formulaire d'ajout d'une Facture avec l'objet Facture et manipulation des données de l'objet Request
-        $uneFacture = new Facture();
-        $form = $this->createForm(AddFactureType::class, $uneFacture);
+        $facture = new Facture();
+        $form = $this->createForm(AddFactureType::class, $facture);
         $form->handleRequest($request);
 
         // Si le formulaire a bien été soumis et est validé
@@ -79,8 +79,8 @@ class FactureController extends AbstractController
             // Si seulement un des 2 champs de paiement a été saisi, on génère une erreur
             // Sinon si les 2 sont vides, on met à jour la facture (cela laisse la possibilité de reporter un paiement d'une facture)
             if (
-                ($uneFacture->getFkMoyenPaiement() !== null && $uneFacture->getDatePaiement() === null) ||
-                ($uneFacture->getFkMoyenPaiement() == null && $uneFacture->getDatePaiement() !== null)
+                ($facture->getFkMoyenPaiement() !== null && $facture->getDatePaiement() === null) ||
+                ($facture->getFkMoyenPaiement() == null && $facture->getDatePaiement() !== null)
             ) {
                 $message = "L'un des 2 champs de paiement a été saisi, veuillez remplir les 2 ou les laisser vide.";
                 return $this->render('facture/ajout.html.twig', [
@@ -91,7 +91,7 @@ class FactureController extends AbstractController
             }
 
             // On définit la date de la facture par défaut puis on persiste l'objet
-            $uneFacture->setDateFacture(new \DateTime());
+            $facture->setDateFacture(new \DateTime());
 
             // Récupère l'ID du client concerné par la facture
             $idClient = $request->request->get('add_facture')['client'];
@@ -102,13 +102,13 @@ class FactureController extends AbstractController
             // Définis l'état à 'Facturé' aux interventions du client correspondant puis ajoute chaque intervention à la facture qui va être persistée
             foreach ($liste as $uneIntervention) {
                 $uneIntervention->setFkEtat($etatRepository->findOneBy(['etat' => 'Facturé', 'fk_type_etat' => $typeEtatRepository->findOneBy(['type' => 'intervention'])]));
-                $uneFacture->addIntervention($uneIntervention);
+                $facture->addIntervention($uneIntervention);
             }
-            $entityManager->persist($uneFacture);
+            $entityManager->persist($facture);
             $entityManager->flush();
 
             // Génère et enregistre le PDF
-            $this->generatePdf($uneFacture);
+            $this->generatePdf($facture);
 
             // Redirection de la page vers le tableau principal
             return $this->redirectToRoute('facture_index');
@@ -124,30 +124,30 @@ class FactureController extends AbstractController
     #[Route('/facture/edit/{id}', name: 'facture_edit', defaults: ['id' => 0], methods: ['GET', 'POST'])]
     public function edit(int $id, FactureRepository $factureRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $uneFacture = $factureRepository->find($id);
+        $facture = $factureRepository->find($id);
 
         // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
-        if($id == 0 || $uneFacture == null) {
+        if($id == 0 || $facture == null) {
             $this->addFlash('facture', 'Cette facture n\'existe pas.');
             return $this->redirectToRoute('facture_index');
         }
 
         // Récupère les données du taux TVA de la facture
         // Utilisés après la soumission du formulaire puisque les champs "client" et "facture" sont désactivés
-        $taux = $uneFacture->getFkTaux();
+        $taux = $facture->getFkTaux();
 
-        $form = $this->createForm(EditFactureType::class, $uneFacture);
+        $form = $this->createForm(EditFactureType::class, $facture);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Met à jour la facture
-            $factureRepository->updateFacture($uneFacture);
+            $factureRepository->updateFacture($facture);
 
             // Définit les valeurs de l'objet Facture avec les variables précédentes contenant ces informations
-            $uneFacture->setFkTaux($taux);
+            $facture->setFkTaux($taux);
 
             // Génère le nouveau PDF de la facture avec les nouvelles informations
-            $this->generatePdf($uneFacture);
+            $this->generatePdf($facture);
 
             return $this->redirectToRoute('facture_index');
         }
@@ -155,7 +155,7 @@ class FactureController extends AbstractController
         return $this->render('facture/edit.html.twig', [
             'errors' => $form->getErrors(true),
             'formEditFacture' => $form->createView(),
-            'interventions' => $uneFacture->getInterventions()->getValues()
+            'interventions' => $facture->getInterventions()->getValues()
         ]);
     }
 
@@ -163,10 +163,10 @@ class FactureController extends AbstractController
     public function download(int $id, FactureRepository $factureRepository, Request $request): Response
     {
         // Récupère toutes les infos sur la facture
-        $uneFacture = $factureRepository->findOneBy(['id' => $id]);
+        $facture = $factureRepository->findOneBy(['id' => $id]);
 
         // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
-        if($id == 0 || $uneFacture == null) {
+        if($id == 0 || $facture == null) {
             $this->addFlash('facture', 'Cette facture n\'existe pas.');
             return $this->redirectToRoute('facture_index');
         }

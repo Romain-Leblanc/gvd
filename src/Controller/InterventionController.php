@@ -47,16 +47,16 @@ class InterventionController extends AbstractController
     #[Route('/intervention/add', name: 'intervention_add', methods: ['GET', 'POST'])]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $uneIntervention = new Intervention();
-        $form = $this->createForm(AddInterventionType::class, $uneIntervention);
+        $intervention = new Intervention();
+        $form = $this->createForm(AddInterventionType::class, $intervention);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
             // Redéfinit les valeurs par défaut
-            $uneIntervention->setFkFacture(null);
-            $uneIntervention->setDateCreation(new \DateTime());
+            $intervention->setFkFacture(null);
+            $intervention->setDateCreation(new \DateTime());
 
-            $entityManager->persist($uneIntervention);
+            $entityManager->persist($intervention);
             $entityManager->flush();
 
             return $this->redirectToRoute('intervention_index');
@@ -71,20 +71,20 @@ class InterventionController extends AbstractController
     #[Route('/intervention/edit/{id}', name: 'intervention_edit', defaults: ['id' => 0], methods: ['GET', 'POST'])]
     public function edit(int $id, InterventionRepository $interventionRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $uneIntervention = $interventionRepository->find($id);
+        $intervention = $interventionRepository->find($id);
 
         // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
-        if($id == 0 || $uneIntervention == null) {
+        if($id == 0 || $intervention == null) {
             $this->addFlash('intervention', 'Cette intervention n\'existe pas.');
             return $this->redirectToRoute('intervention_index');
         }
 
-        $form = $this->createForm(EditInterventionType::class, $uneIntervention);
+        $form = $this->createForm(EditInterventionType::class, $intervention);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Si l'intervention s'apprête à être terminée et que le montant HT est à zéro, on génère une erreur
-            if($uneIntervention->getFkEtat()->getEtat() == "Terminé" && $uneIntervention->getMontantHt() == 0) {
+            if($intervention->getFkEtat()->getEtat() == "Terminé" && $intervention->getMontantHt() == 0) {
                 $message = "L'état de l'intervention est défini sur 'Terminé' mais le montant HT est à zéro.";
                 return $this->render('intervention/edit.html.twig', [
                     'errors' => $form->addError(new FormError($message))->getErrors(true),
@@ -92,7 +92,7 @@ class InterventionController extends AbstractController
                 ]);
             }
             // Sinon si le type d'état de l'intervention concerne ceux des véhicules, on génère une erreur
-            elseif ($uneIntervention->getFkEtat()->getFkTypeEtat()->getType() == "vehicule") {
+            elseif ($intervention->getFkEtat()->getFkTypeEtat()->getType() == "vehicule") {
                 $message = "L'état de l'intervention doit concernés ceux pour les interventions.";
                 return $this->render('intervention/edit.html.twig', [
                     'errors' => $form->addError(new FormError($message))->getErrors(true),
@@ -100,7 +100,7 @@ class InterventionController extends AbstractController
                 ]);
             }
             else {
-                $interventionRepository->updateIntervention($uneIntervention);
+                $interventionRepository->updateIntervention($intervention);
                 return $this->redirectToRoute('intervention_index');
             }
         }

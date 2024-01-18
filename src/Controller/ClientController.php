@@ -39,12 +39,12 @@ class ClientController extends AbstractController
     #[Route('/client/add', name: 'client_add', methods: ['GET', 'POST'])]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $unClient = new Client();
-        $form = $this->createForm(AddClientType::class, $unClient);
+        $client = new Client();
+        $form = $this->createForm(AddClientType::class, $client);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            $entityManager->persist($unClient);
+            $entityManager->persist($client);
             $entityManager->flush();
 
             return $this->redirectToRoute('client_index');
@@ -59,18 +59,18 @@ class ClientController extends AbstractController
     #[Route('/client/edit/{id}', name: 'client_edit', defaults: ['id' => 0], methods: ['GET', 'POST'])]
     public function edit(int $id, ClientRepository $clientRepository, Request $request): Response
     {
-        $unClient = $clientRepository->find($id);
+        $client = $clientRepository->find($id);
 
         // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
-        if($id == 0 || $unClient == null) {
+        if($id == 0 || $client == null) {
             $this->addFlash('client', 'Ce client n\'existe pas.');
             return $this->redirectToRoute('client_index');
         }
-        $form = $this->createForm(EditClientType::class, $unClient);
+        $form = $this->createForm(EditClientType::class, $client);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            $clientRepository->updateClient($unClient);
+            $clientRepository->updateClient($client);
 
             return $this->redirectToRoute('client_index');
         }

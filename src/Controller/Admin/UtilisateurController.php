@@ -102,7 +102,7 @@ class UtilisateurController extends AbstractController
 
         return $this->renderForm('admin/utilisateur/new.html.twig', [
             'errors' => $form->getErrors(true),
-            'formAddUtilisateur' => $form,
+            'formNewUtilisateur' => $form,
         ]);
     }
 
@@ -171,8 +171,8 @@ class UtilisateurController extends AbstractController
             else {
                 // Vérifie le token puis supprime cet élément
                 $entityManager->remove($utilisateur);
+                $entityManager->flush();
             }
-            $entityManager->flush();
         }
 
         return $this->redirectToRoute('utilisateur_admin_index', [], Response::HTTP_SEE_OTHER);

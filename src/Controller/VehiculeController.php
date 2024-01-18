@@ -51,15 +51,15 @@ class VehiculeController extends AbstractController
     #[Route('/vehicule/add', name: 'vehicule_add', methods: ['GET', 'POST'])]
     public function add(VehiculeRepository $vehiculeRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $unVehicule = new Vehicule();
-        $form = $this->createForm(AddVehiculeType::class, $unVehicule);
+        $vehicule = new Vehicule();
+        $form = $this->createForm(AddVehiculeType::class, $vehicule);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
             // Si l'immatriculation saisie existe déjà et que l'identifiant du véhiculé modifié est différent
             // de celui du véhicule qui possède l'immatriculation existante, on génère une erreur
-            $id = $vehiculeRepository->findOneBy(['immatriculation' => $unVehicule->getImmatriculation()]);
-            if(isset($id) && $unVehicule->getId() != $id->getId()) {
+            $id = $vehiculeRepository->findOneBy(['immatriculation' => $vehicule->getImmatriculation()]);
+            if(isset($id) && $vehicule->getId() != $id->getId()) {
                 $message = "Cette immatriculation existe déjà pour un autre véhicule.";
                 return $this->render('vehicule/add.html.twig', [
                     'errors' => $form->addError(new FormError($message))->getErrors(true),
@@ -68,7 +68,7 @@ class VehiculeController extends AbstractController
             }
             else {
                 // Si aucun identifiant de modèle, on génère une erreur
-                if(is_null($unVehicule->getFkModele()) || $unVehicule->getFkModele() == "") {
+                if(is_null($vehicule->getFkModele()) || $vehicule->getFkModele() == "") {
                     $message = "Veuillez sélectionner un modèle de véhicule.";
                     return $this->render('vehicule/add.html.twig', [
                         'errors' => $form->addError(new FormError($message))->getErrors(true),
@@ -77,7 +77,7 @@ class VehiculeController extends AbstractController
                 }
                 // Sinon on insère
                 else {
-                    $entityManager->persist($unVehicule);
+                    $entityManager->persist($vehicule);
                     $entityManager->flush();
                     return $this->redirectToRoute('vehicule_index');
                 }
@@ -93,22 +93,24 @@ class VehiculeController extends AbstractController
     #[Route('/vehicule/edit/{id}', name: 'vehicule_edit', defaults: ['id' => 0], methods: ['GET', 'POST'])]
     public function edit(int $id, VehiculeRepository $vehiculeRepository, InterventionRepository $interventionRepository, Request $request): Response
     {
-        $unVehicule = $vehiculeRepository->find($id);
+        $vehicule = $vehiculeRepository->find($id);
+
         // Si le paramètre est égale à zéro ou que les resultats du Repository est null, on renvoi au tableau principal correspondant
-        if($id == 0 || $unVehicule == null) {
+        if($id == 0 || $vehicule == null) {
             $this->addFlash('vehicule', 'Ce véhicule n\'existe pas.');
             return $this->redirectToRoute('vehicule_index');
         }
+
         // Si le véhicule est déjà dans une intervention, on ne peut pas modifier à quel client appartient ce véhicule, ni la marque et le modèle.
-        $options = $interventionRepository->findBy(['fk_vehicule' => $unVehicule->getId()]);
-        $form = $this->createForm(EditVehiculeType::class, $unVehicule, ["intervention" => $options]);
+        $options = $interventionRepository->findBy(['fk_vehicule' => $vehicule->getId()]);
+        $form = $this->createForm(EditVehiculeType::class, $vehicule, ["intervention" => $options]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Si l'immatriculation saisie existe déjà et que l'identifiant du véhiculé modifié est différent
             // de celui du véhicule qui possède l'immatriculation existante, on génère une erreur
-            $id = $vehiculeRepository->findOneBy(['immatriculation' => $unVehicule->getImmatriculation()]);
-            if(isset($id) && $unVehicule->getId() != $id->getId()) {
+            $id = $vehiculeRepository->findOneBy(['immatriculation' => $vehicule->getImmatriculation()]);
+            if(isset($id) && $vehicule->getId() != $id->getId()) {
                 $message = "Cette immatriculation existe déjà pour un autre véhicule.";
                 return $this->render('vehicule/edit.html.twig', [
                     'errors' => $form->addError(new FormError($message))->getErrors(true),
@@ -117,7 +119,7 @@ class VehiculeController extends AbstractController
             }
             // Sinon on met à jour les données
             else {
-                $vehiculeRepository->updateVehicule($unVehicule);
+                $vehiculeRepository->updateVehicule($vehicule);
                 return $this->redirectToRoute('vehicule_index');
             }
         }

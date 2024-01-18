@@ -13,39 +13,39 @@
             {% endfor %}
         {% endif %}
         <div class="div-form">
-            {{ form_start(formAddUtilisateur) }}
+            {{ form_start(formNewUtilisateur) }}
             <div class="d-flex flex-column gap-3">
                 <div class="row">
-                    {{ form_label(formAddUtilisateur.nom) }}
+                    {{ form_label(formNewUtilisateur.nom) }}
                     <div class="col-lg-5 col-md-6 row mx-0">
-                        {{ form_widget(formAddUtilisateur.nom) }}
+                        {{ form_widget(formNewUtilisateur.nom) }}
                     </div>
                 </div>
                 <div class="row">
-                    {{ form_label(formAddUtilisateur.prenom) }}
+                    {{ form_label(formNewUtilisateur.prenom) }}
                     <div class="col-lg-5 col-md-6 row mx-0">
-                        {{ form_widget(formAddUtilisateur.prenom) }}
+                        {{ form_widget(formNewUtilisateur.prenom) }}
                     </div>
                 </div>
                 <div class="row">
-                    {{ form_label(formAddUtilisateur.email) }}
+                    {{ form_label(formNewUtilisateur.email) }}
                     <div class="col-lg-5 col-md-6 row mx-0">
-                        {{ form_widget(formAddUtilisateur.email) }}
+                        {{ form_widget(formNewUtilisateur.email) }}
                     </div>
                 </div>
                 <div class="row">
-                    {{ form_label(formAddUtilisateur.password) }}
+                    {{ form_label(formNewUtilisateur.password) }}
                     <div class="col-lg-5 col-md-6 row mx-0">
-                        {{ form_widget(formAddUtilisateur.password) }}
+                        {{ form_widget(formNewUtilisateur.password) }}
                     </div>
                 </div>
                 <div class="row">
-                    {{ form_label(formAddUtilisateur.roles) }}
+                    {{ form_label(formNewUtilisateur.roles) }}
                     <div class="col-lg-5 col-md-6 row mx-0">
-                        {% if "ROLE_ADMIN" in formAddUtilisateur.roles.vars.value %}
-                            {{ form_widget(formAddUtilisateur.roles, { 'value': "ROLE_ADMIN" }) }}
+                        {% if "ROLE_ADMIN" in formNewUtilisateur.roles.vars.value %}
+                            {{ form_widget(formNewUtilisateur.roles, { 'value': "ROLE_ADMIN" }) }}
                         {% else %}
-                            {{ form_widget(formAddUtilisateur.roles, { 'value': "ROLE_USER" }) }}
+                            {{ form_widget(formNewUtilisateur.roles, { 'value': "ROLE_USER" }) }}
                         {% endif %}
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                     <button class="btn btn-success fs-14" type="submit">Valider</button>
                 </div>
             </div>
-            {{ form_end(formAddUtilisateur) }}
+            {{ form_end(formNewUtilisateur) }}
         </div>
     </div>
 {% endblock %}

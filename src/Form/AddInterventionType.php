@@ -28,7 +28,7 @@ class AddInterventionType extends AbstractType
 
         // Impossible d'ajouter une intervention pour le dimanche, donc on la reporte au lendemain
         // Sinon on ajoute un jour à la date de l'intervention
-        $dateLendemain = date_modify($dateIntervention, ' + 1 day');
+        $dateLendemain = $dateIntervention->modify('+ 1 day');
         if(date("l", $dateLendemain->getTimestamp()) == "Sunday") {
             $date = date("Y-m-d", date_modify($dateLendemain, ' + 1 day')->getTimestamp());
         }
