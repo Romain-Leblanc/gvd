@@ -36,7 +36,7 @@
             <h5 id="titre-admin" class="mt-2 p-2">Administration</h5>
             <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
                 <a class="mt-3 fs-14 btn btn-outline-primary {{ menuActif(app.request.attributes.get('_route'), "utilisateur") }}" href="{{ path('utilisateur_admin_index') }}">Utilisateurs</a>
-                <a class="mt-3 fs-14 btn btn-outline-primary {{ menuActif(app.request.attributes.get('_route'), "marque") }}" href="#">Marques</a>
+                <a class="mt-3 fs-14 btn btn-outline-primary {{ menuActif(app.request.attributes.get('_route'), "marque") }}" href="{{ path('marque_admin_index') }}">Marques</a>
                 <a class="mt-3 fs-14 btn btn-outline-primary {{ menuActif(app.request.attributes.get('_route'), "modele") }}" href="#">Modèles</a>
                 <a class="mt-3 fs-14 btn btn-outline-primary {{ menuActif(app.request.attributes.get('_route'), "facture") }}" href="{{ path('facture_admin_index') }}">Factures</a>
             </div>

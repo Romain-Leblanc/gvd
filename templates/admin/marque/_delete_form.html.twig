@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('marque_admin_delete', {'id': uneMarque.id }) }}" onsubmit="return confirm('Êtes-vous sûr de bien vouloir supprimer cet élément ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ uneMarque.id ) }}">
+    <button class="btn btn-danger fs-11"><i class="fa-solid fa-trash"></i></button>
+</form>

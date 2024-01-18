@@ -1,0 +1,70 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Liste marques{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column gap-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ path('marque_admin_new') }}" class="btn btn-success fs-13">Ajouter</a>
+            <form action="{{ path('marque_admin_index') }}" method="GET" class="fs-13">
+                <label for="filter-admin" class="mb-0 p-0 d-flex justify-content-end">Nombre lignes :</label>
+                <select id="filter-admin" class="form-select form-select-sm fs-13" name="max" onchange="submit();">
+                    {% for unChoix in choixListe %}
+                        <option
+                                {% if app.request.query.get('max') is not null and unChoix == app.request.query.get('max') %}selected{% endif %}
+                                value="{{ unChoix }}">{{ unChoix }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            {{ knp_pagination_render(lesMarquesPagination) }}
+        </div>
+        {% for notice in app.flashes('marque') %}
+            <div class="alert alert-danger" role="alert">{{ notice|nl2br }}</div>
+        {% endfor %}
+        <table style="overflow-x: auto" class="table table-admin table-admin-marque table-responsive table-hover table-bordered text-center align-middle">
+            <thead class="table-light align-middle">
+            <tr>
+                {{ form_start(formFiltreTable) }}
+                <th class="w-15{% if lesMarquesPagination.isSorted('ma.id') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(lesMarquesPagination, 'Id', 'ma.id') }}
+                    {{ form_widget(formFiltreTable.id_marque) }}
+                </th>
+                <th class="w-50{% if lesMarquesPagination.isSorted('ma.marque') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(lesMarquesPagination, 'Marque', 'ma.marque') }}
+                    {{ form_widget(formFiltreTable.marque) }}
+                </th>
+                <th class="w-15{% if lesMarquesPagination.isSorted('nombre') %}sorted{% endif %}">
+                    {{ knp_pagination_sortable(lesMarquesPagination, 'Nombre modèles', 'nombre') }}
+                </th>
+                <th class="w-30">Actions</th>
+                {{ form_end(formFiltreTable) }}
+            </tr>
+            </thead>
+            <tbody>
+            {% if lesMarquesForm is not empty %}
+                {% for uneMarque in lesMarquesForm %}
+                    <tr>
+                        <td class="w-15">{{ uneMarque.id }}</td>
+                        <td class="w-50">{{ uneMarque.marque|upper }}</td>
+                        <td class="w-15">{{ uneMarque.nombre }}</td>
+                        <td>
+                            <div class="div-boutons-admin">
+                                <a href="{{ path('marque_admin_edit', { 'id': uneMarque.id }) }}" class="btn btn-warning fs-11 text-dark"><i class="fa-solid fa-pen"></i></a>
+                                {% if uneMarque.nombre == 0 %}
+                                    {{ include('admin/marque/_delete_form.html.twig') }}
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucune donnée.</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
