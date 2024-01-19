@@ -3,12 +3,6 @@
 namespace App\Form\FiltreTable;
 
 use App\Entity\Client;
-use App\Entity\Etat;
-use App\Entity\Marque;
-use App\Entity\Modele;
-use App\Entity\Vehicule;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

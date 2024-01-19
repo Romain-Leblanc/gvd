@@ -6,7 +6,6 @@ use App\Entity\Modele;
 use App\Repository\ModeleRepository;
 use App\Validator\Modele as modele_validator;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;

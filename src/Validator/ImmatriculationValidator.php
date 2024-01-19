@@ -2,7 +2,6 @@
 
 namespace App\Validator;
 
-use App\Repository\VehiculeRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
