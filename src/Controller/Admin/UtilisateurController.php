@@ -29,7 +29,7 @@ class UtilisateurController extends AbstractController
             && is_integer($request->query->getInt('max'))
             && in_array($request->query->getInt('max'), $this->configPaginationList())
         ) {
-            $donnees = $donnees->setMaxResults($this->configPaginationLimit())->getQuery();
+            $donnees = $donnees->setMaxResults($request->query->getInt('max'))->getQuery();
         }
         elseif ($request->query->get('sort') == "u.roles" && in_array($request->query->get('direction'), ['asc', 'desc'])) {
             // Le tri par role utilisateur avec createQueryBuilder ne fonctionne pas
@@ -42,7 +42,7 @@ class UtilisateurController extends AbstractController
         $lesUtilisateursPagination = $paginator->paginate(
             $donnees,
             $request->query->getInt('page', 1),
-            $this->configPaginationLimit()
+            ($request->query->getInt('max') > 0) ? $request->query->getInt('max') : $this->configPaginationLimit()
         );
 
         // Valeurs par défaut des résultats des filtres
