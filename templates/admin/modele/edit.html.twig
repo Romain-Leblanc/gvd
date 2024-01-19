@@ -1,0 +1,37 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Modification modèle{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column gap-4">
+        <div class="d-flex justify-content-center align-items-center">
+            <h6 class="mb-0 text-primary text-decoration-underline">Modèle n°{{ formEditModele.vars.value.getId }}</h6>
+        </div>
+        {% if errors is defined %}
+            {% for error in errors %}
+                <div class="alert alert-danger" role="alert">{{ error.message|nl2br }}</div>
+            {% endfor %}
+        {% endif %}
+        <div class="div-form">
+            {{ form_start(formEditModele) }}
+            <div class="d-flex flex-column gap-3">
+                <div class="row">
+                    {{ form_label(formEditModele.fk_marque) }}
+                    <div class="col-lg-5 col-md-6 row mx-0">
+                        {{ form_widget(formEditModele.fk_marque) }}
+                    </div>
+                </div>
+                <div class="row">
+                    {{ form_label(formEditModele.modele) }}
+                    <div class="col-lg-5 col-md-6 row mx-0">
+                        {{ form_widget(formEditModele.modele) }}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button class="btn btn-success fs-14" type="submit">Valider</button>
+                </div>
+            </div>
+            {{ form_end(formEditModele) }}
+        </div>
+    </div>
+{% endblock %}
