@@ -47,7 +47,12 @@ class UtilisateurAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new RedirectResponse($this->urlGenerator->generate('intervention_index'));
+        if($this->security->isGranted('ROLE_ADMIN')) {
+            return new RedirectResponse($this->urlGenerator->generate('facture_admin_index'));
+        }
+        else {
+            return new RedirectResponse($this->urlGenerator->generate('intervention_index'));
+        }
     }
 
     protected function getLoginUrl(Request $request): string
