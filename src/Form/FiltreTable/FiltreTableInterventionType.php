@@ -53,7 +53,9 @@ class FiltreTableInterventionType extends AbstractType
                         ->innerJoin(Vehicule::class, 'v', Join::WITH, 'i.fk_vehicule = v.id')
                         ->innerJoin(Modele::class, 'mo', Join::WITH, 'v.fk_modele = mo.id')
                         ->innerJoin(Marque::class, 'ma', Join::WITH, 'mo.fk_marque = ma.id')
-                        ;
+                        ->addOrderBy('ma.marque')
+                        ->addOrderBy('mo.modele')
+                    ;
                 },
                 'choice_label' => function(Intervention $intervention){
                     return mb_strtoupper($intervention->getFkVehicule()->getFKModele()->getFKMarque()->getMarque())." ".ucfirst($intervention->getFkVehicule()->getFKModele()->getModele());
@@ -75,7 +77,9 @@ class FiltreTableInterventionType extends AbstractType
                 'query_builder' => function(EntityRepository $entityRepository) {
                     return $entityRepository->createQueryBuilder('c')
                         ->innerJoin(Vehicule::class, 'v', Join::WITH, 'v.fk_client = c.id')
-                        ;
+                        ->addOrderBy('c.nom')
+                        ->addOrderBy('c.prenom')
+                    ;
                 },
                 'choice_value' => 'id',
                 'attr' => [

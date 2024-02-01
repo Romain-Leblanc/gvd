@@ -34,7 +34,7 @@ class FiltreTableMarqueType extends AbstractType
                 'query_builder' => function(EntityRepository $entityRepository) {
                     return $entityRepository->createQueryBuilder("ma")
                         ->groupBy('ma.marque')
-                        ;
+                    ;
                 },
                 'choice_label' => function(Marque $marque) {
                     return mb_strtoupper($marque->getMarque());

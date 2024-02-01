@@ -74,7 +74,7 @@ class EditInterventionType extends AbstractType
                         ->innerJoin(Vehicule::class, 'v', Join::WITH, 'v.fk_client = c.id')
                         ->groupBy("c.id")
                         ->distinct()
-                        ;
+                    ;
                 },
                 'choice_label' => function(Client $client){
                     return mb_strtoupper($client->getNom())." ".ucfirst($client->getPrenom())." - ".mb_strtoupper($client->getVille());
@@ -116,7 +116,7 @@ class EditInterventionType extends AbstractType
                         ->andWhere("te.type = :type")
                         ->setParameter(':etat', '%Facturé%')
                         ->setParameter(':type', 'intervention')
-                        ;
+                    ;
                 },
                 'choice_label' => function(Etat $etat){
                     return ucfirst($etat->getEtat());

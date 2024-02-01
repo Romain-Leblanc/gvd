@@ -70,7 +70,7 @@ class AddInterventionType extends AbstractType
                         ->setParameter(':type', 'vehicule')
                         ->groupBy('c.id')
                         ->distinct()
-                        ;
+                    ;
                 },
                 'choice_label' => function(Client $client){
                     return mb_strtoupper($client->getNom())." ".ucfirst($client->getPrenom())." - ".mb_strtoupper($client->getVille());
@@ -114,7 +114,7 @@ class AddInterventionType extends AbstractType
                         ->andWhere('te.type = :type')
                         ->setParameter(':etat', '%attente%')
                         ->setParameter(':type', 'intervention')
-                        ;
+                    ;
                 },
                 'choice_label' => function(Etat $etat){
                     return ucfirst($etat->getEtat());

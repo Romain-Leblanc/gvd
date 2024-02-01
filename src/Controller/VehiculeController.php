@@ -55,7 +55,7 @@ class VehiculeController extends AbstractController
         $form = $this->createForm(AddVehiculeType::class, $vehicule);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             // Si l'immatriculation saisie existe déjà et que l'identifiant du véhiculé modifié est différent
             // de celui du véhicule qui possède l'immatriculation existante, on génère une erreur
             $id = $vehiculeRepository->findOneBy(['immatriculation' => $vehicule->getImmatriculation()]);

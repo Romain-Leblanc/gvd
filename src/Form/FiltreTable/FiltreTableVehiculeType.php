@@ -44,7 +44,9 @@ class FiltreTableVehiculeType extends AbstractType
                 'query_builder' => function(EntityRepository $entityRepository) {
                     return $entityRepository->createQueryBuilder('c')
                         ->innerJoin(Vehicule::class, 'v', Join::WITH, 'v.fk_client = c.id')
-                        ;
+                        ->addOrderBy('c.nom')
+                        ->addOrderBy('c.prenom')
+                    ;
                 },
                 'choice_value' => 'id',
                 'attr' => [
@@ -61,7 +63,9 @@ class FiltreTableVehiculeType extends AbstractType
                     return $entityRepository->createQueryBuilder("v")
                         ->innerJoin(Modele::class, 'mo', Join::WITH, 'v.fk_modele = mo.id')
                         ->innerJoin(Marque::class, 'ma', Join::WITH, 'mo.fk_marque = ma.id')
-                        ;
+                        ->addOrderBy('ma.marque')
+                        ->addOrderBy('mo.modele')
+                    ;
                 },
                 'choice_label' => function(Vehicule $vehicule){
                     return mb_strtoupper($vehicule->getFKModele()->getFKMarque()->getMarque())." ".ucfirst($vehicule->getFKModele()->getModele());
@@ -97,7 +101,7 @@ class FiltreTableVehiculeType extends AbstractType
                         ->innerJoin(TypeEtat::class, 'te', Join::WITH, 'e.fk_type_etat = te.id')
                         ->andWhere('te.type = :type')
                         ->setParameter(':type', 'vehicule')
-                        ;
+                    ;
                 },
                 'choice_value' => 'id',
                 'attr' => [

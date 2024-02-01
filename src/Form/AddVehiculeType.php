@@ -18,6 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddVehiculeType extends AbstractType
@@ -51,7 +53,7 @@ class AddVehiculeType extends AbstractType
                     return $entityRepository->createQueryBuilder("ma")
                         ->innerJoin(Modele::class, 'mo', Join::WITH, 'mo.fk_marque = ma.id')
                         ->distinct()
-                        ;
+                    ;
                 },
                 'attr' => [
                     'class' => 'text-center select2-value-100',
@@ -64,7 +66,17 @@ class AddVehiculeType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('fk_modele', EntityType::class, [
+            // Obligatoire pour afficher et valider la valeur du champ Marque
+            // en entité puisque ce champ n'est pas mappé (appartient à l'entité Modèle)
+            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
+                $product = $event->getData();
+                $form = $event->getForm();
+
+                if ($product->getId() != null) {
+                    $form->get('fk_marque')->setData($product->getFkModele()->getFkMarque());
+                }
+            });
+        $builder->add('fk_modele', EntityType::class, [
                 'class' => Modele::class,
                 "placeholder" => "-- Modèle --",
                 'choice_label' => function(Modele $modele){
@@ -96,7 +108,7 @@ class AddVehiculeType extends AbstractType
                         ->andWhere('te.type = :type')
                         ->setParameter(':etat', 'Fonctionnel')
                         ->setParameter(':type', 'vehicule')
-                        ;
+                    ;
                 },
                 'attr' => [
                     'class' => 'form-select text-center input-50',

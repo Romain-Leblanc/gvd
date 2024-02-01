@@ -24,7 +24,11 @@
                 </div>
                 <div class="div-select-line">
                     {{ form_label(formAddVehicule.fk_modele) }}
-                    {{ form_widget(formAddVehicule.fk_modele) }}
+                    {% if errors is defined %}
+                        {{ form_widget(formAddVehicule.fk_modele, { 'attr': { 'disabled': false }}) }}
+                    {% else %}
+                        {{ form_widget(formAddVehicule.fk_modele) }}
+                    {% endif %}
                 </div>
             </div>
             <div class="div-detail mb-3">
@@ -59,7 +63,7 @@
             </div>
         </div>
         <div class="div-envoi-form">
-            <button id="btn-submit" disabled type="submit" class="btn btn-success">Valider</button>
+            <button id="btn-submit" {% if errors is not defined %}disabled{% endif %} type="submit" class="btn btn-success">Valider</button>
         </div>
         {{ form_end(formAddVehicule) }}
     </div>
