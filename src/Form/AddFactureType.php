@@ -46,6 +46,8 @@ class AddFactureType extends AbstractType
                         ->andWhere("i.fk_facture IS NULL")
                         ->setParameter('etat', 'Terminé')
                         ->setParameter('type_etat', 'intervention')
+                        ->addOrderBy('c.nom')
+                        ->addOrderBy('c.prenom')
                     ;
                 },
                 'choice_label' => function(Client $client){

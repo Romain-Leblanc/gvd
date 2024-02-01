@@ -70,6 +70,8 @@ class AddInterventionType extends AbstractType
                         ->setParameter(':type', 'vehicule')
                         ->groupBy('c.id')
                         ->distinct()
+                        ->addOrderBy('c.nom')
+                        ->addOrderBy('c.prenom')
                     ;
                 },
                 'choice_label' => function(Client $client){

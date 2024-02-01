@@ -51,7 +51,7 @@ class InterventionController extends AbstractController
         $form = $this->createForm(AddInterventionType::class, $intervention);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             // Redéfinit les valeurs par défaut
             $intervention->setFkFacture(null);
             $intervention->setDateCreation(new \DateTime());

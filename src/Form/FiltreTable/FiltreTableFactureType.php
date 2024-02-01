@@ -55,6 +55,8 @@ class FiltreTableFactureType extends AbstractType
                         ->innerJoin(Vehicule::class, 'v', Join::WITH, 'v.fk_client = c.id')
                         ->innerJoin(Intervention::class, 'i', Join::WITH, 'i.fk_vehicule = v.id')
                         ->innerJoin(Facture::class, 'f', Join::WITH, 'i.fk_facture = f.id')
+                        ->addOrderBy('c.nom')
+                        ->addOrderBy('c.prenom')
                     ;
                 },
                 'choice_value' => 'id',

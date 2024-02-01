@@ -53,6 +53,8 @@ class AddVehiculeType extends AbstractType
                     return $entityRepository->createQueryBuilder("ma")
                         ->innerJoin(Modele::class, 'mo', Join::WITH, 'mo.fk_marque = ma.id')
                         ->distinct()
+                        ->addOrderBy('ma.marque')
+                        ->addOrderBy('mo.modele')
                     ;
                 },
                 'attr' => [
@@ -69,11 +71,11 @@ class AddVehiculeType extends AbstractType
             // Obligatoire pour afficher et valider la valeur du champ Marque
             // en entité puisque ce champ n'est pas mappé (appartient à l'entité Modèle)
             ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
-                $product = $event->getData();
+                $data = $event->getData();
                 $form = $event->getForm();
 
-                if ($product->getId() != null) {
-                    $form->get('fk_marque')->setData($product->getFkModele()->getFkMarque());
+                if ($data->getId() != null) {
+                    $form->get('fk_marque')->setData($data->getFkModele()->getFkMarque());
                 }
             });
         $builder->add('fk_modele', EntityType::class, [

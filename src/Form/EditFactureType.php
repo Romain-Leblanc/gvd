@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EditFactureType extends AbstractType
@@ -49,8 +51,18 @@ class EditFactureType extends AbstractType
                 ],
                 'mapped' => false,
                 'required' => true
-            ])
-            ->add('fk_taux', EntityType::class, [
+            ])    
+            // Obligatoire pour afficher et valider la valeur du champ Client
+            // en entité puisque ce champ n'est pas mappé (appartient à l'entité Véhicule)
+            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
+                $data = $event->getData();
+                $form = $event->getForm();
+
+                if ($data->getInterventions() != null) {
+                    $form->get('client')->setData($data->getInterventions()->getValues()[0]->getFkVehicule()->getFkClient());
+                }
+            });
+        $builder->add('fk_taux', EntityType::class, [
                 'class' => TVA::class,
                 'choice_label' => function(TVA $taux){
                     return $taux->getTaux()." %";

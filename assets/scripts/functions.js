@@ -204,7 +204,7 @@ global.getInfosFromClientFacture = function getInfosFromClientFacture() {
 
                 // Concaténation du détail des interventions dans le tableau et du total HT des interventions
                 donnees = JSON.parse(data.donnees);
-                donnees.forEach(element => { console.log(element);
+                donnees.forEach(element => {
                     listeIntervention += '<tr class="tr-table-fact" id="tr-tab">' +
                         '<td width="15%" scope="row" class="align-middle" id="td-date-intervention">'+new Date(element.date_intervention).toLocaleDateString("fr")+'</td>' +
                         '<td width="20%" scope="row" class="align-middle" id="td-infos-vehicule">'+element.fk_vehicule.fk_modele.fk_marque.marque+" - "+element.fk_vehicule.fk_modele.modele+'</td>' +

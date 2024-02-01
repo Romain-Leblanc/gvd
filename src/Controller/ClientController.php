@@ -43,7 +43,7 @@ class ClientController extends AbstractController
         $form = $this->createForm(AddClientType::class, $client);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($client);
             $entityManager->flush();
 
@@ -69,7 +69,7 @@ class ClientController extends AbstractController
         $form = $this->createForm(EditClientType::class, $client);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $clientRepository->updateClient($client);
 
             return $this->redirectToRoute('client_index');

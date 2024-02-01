@@ -44,7 +44,12 @@
                 <tbody>
                 {% if lesFactures is not empty %}
                     {% for uneFacture in lesFactures %}
-                        <tr>
+                        {% if uneFacture.getFkMoyenPaiement is not null and uneFacture.getDatePaiement is not null %}
+                            {% set couleur = "tr-vert" %}
+                        {% else %}
+                            {% set couleur = "tr-orange" %}
+                        {% endif %}
+                        <tr class="{{ couleur }}">
                             <td id="radio-button-table">
                                 <input type="radio" class="form-check-input" id="radio-input" name="radio-input" onclick="boutonsFacture({{ uneFacture.id }});" />
                             </td>
