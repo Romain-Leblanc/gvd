@@ -31,6 +31,8 @@ class ModeleController extends AbstractController
             ->leftJoin(Vehicule::class, 'v', Join::WITH, 'v.fk_modele = mo.id')
             ->join('mo.fk_marque', 'ma')
             ->groupBy('mo.id')
+            ->addOrderBy('ma.marque')
+            ->addOrderBy('mo.modele')
         ;
 
         // Récupère le paramètre de limite de résultat s'il a été définit dans l'URL
@@ -78,7 +80,7 @@ class ModeleController extends AbstractController
                         ->setParameter('id_marque', $data['marque'])
                     ;
                 }
-                $lesModelesForm = $query->groupBy('mo.id')->getQuery()->getResult();
+                $lesModelesForm = $query->groupBy('mo.id')->addOrderBy('ma.marque')->addOrderBy('mo.modele')->getQuery()->getResult();
             }
         }
 

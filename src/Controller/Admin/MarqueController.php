@@ -30,6 +30,7 @@ class MarqueController extends AbstractController
             ->addSelect('COUNT(mo.id) as nombre')
             ->leftJoin(Modele::class, 'mo', Join::WITH, 'ma.id = mo.fk_marque')
             ->groupBy('ma.id')
+            ->orderBy('ma.marque')
         ;
 
         // Récupère le paramètre de limite de résultat s'il a été définit dans l'URL
@@ -95,8 +96,8 @@ class MarqueController extends AbstractController
             $entityManager->persist($marque);
             $entityManager->flush();
 
-            return $this->redirectToRoute('marque_admin_index', [], Response::HTTP_SEE_OTHER);
-            // return $this->redirectToRoute('modele_admin_add', ['idmarque' => $uneMarque->getId()], Response::HTTP_SEE_OTHER);
+            // return $this->redirectToRoute('marque_admin_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('modele_admin_new', ['idmarque' => $marque->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('admin/marque/new.html.twig', [

@@ -97,7 +97,6 @@ html {
         vertical-align: middle;
     }
 }
-/*@media screen and (max-width: 991px) {*/
 @media screen and (max-width: 1199px) {
     .div-boutons-admin {
         display: flex;

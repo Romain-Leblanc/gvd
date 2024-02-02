@@ -207,7 +207,6 @@ class FactureController extends AbstractController
     {
         // Récupère l'identifiant pour la requête
         $id = (int) $request->request->get('clientID');
-        // $id = 7;
         if (!empty($id) && $id !== 0) {
             // Renvoi la liste des interventions non facturés des véhicules du client pour Ajax au format JSON
             $liste = $interventionRepository->findInterventionByClientAndEtat($id);

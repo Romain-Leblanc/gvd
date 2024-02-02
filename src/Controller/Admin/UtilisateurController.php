@@ -22,14 +22,14 @@ class UtilisateurController extends AbstractController
     public function index(UtilisateurRepository $utilisateurRepository, PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupère la requête puisque KnpPaginator s'occupe des données lui-même
-        $donnees = $utilisateurRepository->createQueryBuilder('u');
+        $donnees = $utilisateurRepository->createQueryBuilder('u')->addOrderBy('u.nom')->addOrderBy('u.prenom');
 
         // Récupère le paramètre de limite de résultat s'il a été définit dans l'URL
         if($request->query->getInt('max') > 0
             && is_integer($request->query->getInt('max'))
             && in_array($request->query->getInt('max'), $this->configPaginationList())
         ) {
-            $donnees = $donnees->setMaxResults($request->query->getInt('max'))->getQuery();
+            $donnees = $donnees->setMaxResults($request->query->getInt('max'))->addOrderBy('u.nom')->addOrderBy('u.prenom')->getQuery();
         }
         elseif ($request->query->get('sort') == "u.roles" && in_array($request->query->get('direction'), ['asc', 'desc'])) {
             // Le tri par role utilisateur avec createQueryBuilder ne fonctionne pas
@@ -148,7 +148,7 @@ class UtilisateurController extends AbstractController
 
         return $this->renderForm('admin/utilisateur/edit.html.twig', [
             'errors' => $form->getErrors(true),
-            'formModificationUtilisateur' => $form
+            'formEditUtilisateur' => $form
         ]);
     }
 

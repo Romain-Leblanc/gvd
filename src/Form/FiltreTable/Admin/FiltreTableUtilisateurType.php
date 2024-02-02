@@ -45,8 +45,8 @@ class FiltreTableUtilisateurType extends AbstractType
                     'onchange' => 'submit();'
                 ],
                 'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN'
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Utilisateur' => 'ROLE_USER'
                 ],
                 'placeholder' => '',
             ])
